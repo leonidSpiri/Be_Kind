@@ -1,7 +1,7 @@
 package ru.spiridonov.be.kind.domain.entity
 
 data class VolunteerItem(
-    val id: Int,
+    val uuid: String,
     val surName: String,
     val name: String,
     val lastname: String,
