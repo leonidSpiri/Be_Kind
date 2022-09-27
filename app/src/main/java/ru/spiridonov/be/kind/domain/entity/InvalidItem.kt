@@ -12,7 +12,7 @@ data class InvalidItem(
     var city: String,
     var address: String? = null,
     var helpReason: List<String>,
-    var photoUrl: String,
+    var photoUrl: String?=  null,
     var passportGeneralUrl: String? = null,
     var passportRegistrationUrl: String? = null,
     var certOfDisabilityUrl: String? = null,

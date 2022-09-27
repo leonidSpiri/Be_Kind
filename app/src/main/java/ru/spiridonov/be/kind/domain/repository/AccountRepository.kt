@@ -13,5 +13,9 @@ interface AccountRepository {
 
     fun registerVolunteer(volunteerItem: VolunteerItem)
 
+    fun getExistingInvalidAccount(): InvalidItem?
+
+    fun getExistingVolunteerAccount(): VolunteerItem?
+
     fun deleteAccount(uuid: String, reason: String): Boolean
 }

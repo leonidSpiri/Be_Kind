@@ -1,6 +1,7 @@
 package ru.spiridonov.be.kind
 
 import android.app.Application
+import android.content.Context
 import ru.spiridonov.be.kind.di.DaggerApplicationComponent
 
 class BeKindApp : Application()/*, Configuration.Provider*/ {
@@ -15,6 +16,7 @@ class BeKindApp : Application()/*, Configuration.Provider*/ {
     override fun onCreate() {
         component.inject(this)
         super.onCreate()
+        appContext = applicationContext
     }
 
     /*override fun getWorkManagerConfiguration(): Configuration {
@@ -24,4 +26,8 @@ class BeKindApp : Application()/*, Configuration.Provider*/ {
             )
             .build()
     }*/
+
+    companion object{
+        lateinit  var appContext: Context
+    }
 }

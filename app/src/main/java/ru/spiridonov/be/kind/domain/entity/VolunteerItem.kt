@@ -10,7 +10,7 @@ data class VolunteerItem(
     val birthday: String,
     var city: String,
     var helpReason: List<String>,
-    var photoUrl: String,
+    var photoUrl: String? = null,
     var passportGeneralUrl: String? = null,
     var passportRegistrationUrl: String? = null,
     var certOfMedicalEduUrl: String? = null,

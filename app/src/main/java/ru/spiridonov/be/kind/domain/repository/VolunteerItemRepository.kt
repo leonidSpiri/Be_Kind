@@ -6,5 +6,5 @@ interface VolunteerItemRepository {
 
     suspend fun editVolunteerItem(VolunteerItem: VolunteerItem)
 
-    fun getVolunteerItem(): VolunteerItem
+    fun getVolunteerItem(): VolunteerItem?
 }

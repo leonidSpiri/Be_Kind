@@ -6,5 +6,5 @@ interface InvalidItemRepository {
 
     suspend fun editInvalidItem(invalidItem: InvalidItem)
 
-    fun getInvalidItem(): InvalidItem
+    fun getInvalidItem(): InvalidItem?
 }
