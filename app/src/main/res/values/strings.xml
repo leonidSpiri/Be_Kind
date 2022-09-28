@@ -3,4 +3,12 @@
     <string name="email">Почта</string>
     <string name="password">Пароль</string>
     <string name="sign_in">Войти</string>
+    <string name="sign_up">Зарегистрироваться</string>
+    <string name="error_input_name">Ошибка при вводе данных</string>
+    <string name="surname">Фамилия</string>
+    <string name="name">Имя</string>
+    <string name="lastname">Отчество</string>
+    <string name="personal_number">Личный номер телефона</string>
+    <string name="birthday">Дата рождения</string>
+    <string name="city">Город проживания</string>
 </resources>

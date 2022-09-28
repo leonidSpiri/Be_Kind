@@ -18,24 +18,24 @@ class AccountRepositoryImpl @Inject constructor(
     }
 
     override fun registerInvalid(invalidItem: InvalidItem) {
+        //TODO("Send to server and update uuid")
         sharedPref.setInvalidAccountInfo(invalidItem)
-        //TODO("Send to server")
     }
 
     override fun registerVolunteer(volunteerItem: VolunteerItem) {
+        //TODO("Send to server and update uuid")
         sharedPref.setVolunteerAccountInfo(volunteerItem)
-        //TODO("Send to server")
     }
 
     override fun getExistingInvalidAccount(): InvalidItem? {
         val item = sharedPref.getInvalidAccountInfo()
-        if (item.uuid.isEmpty()) return null
+        //if (item.uuid.isEmpty()) return null
         return item
     }
 
     override fun getExistingVolunteerAccount(): VolunteerItem? {
         val item = sharedPref.getVolunteerAccountInfo()
-        if (item.uuid.isEmpty()) return null
+        //if (item.uuid.isEmpty()) return null
         return item
     }
 

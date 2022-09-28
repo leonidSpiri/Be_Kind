@@ -14,7 +14,7 @@ class VolunteerItemRepositoryImpl @Inject constructor(
 
     override fun getVolunteerItem(): VolunteerItem? {
         val item = sharedPref.getVolunteerAccountInfo()
-        if (item.uuid.isEmpty()) return null
+      //  if (item.uuid.isEmpty()) return null
         return item
     }
 }

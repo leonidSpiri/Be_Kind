@@ -5,7 +5,9 @@ import dagger.BindsInstance
 import dagger.Component
 import ru.spiridonov.be.kind.BeKindApp
 import ru.spiridonov.be.kind.presentation.MainActivity
-import ru.spiridonov.be.kind.presentation.RegisterActivity
+import ru.spiridonov.be.kind.presentation.account.AccountActivity
+import ru.spiridonov.be.kind.presentation.account.ui.LoginFragment
+import ru.spiridonov.be.kind.presentation.account.ui.RegisterFragment
 
 @ApplicationScope
 @Component(
@@ -17,8 +19,9 @@ import ru.spiridonov.be.kind.presentation.RegisterActivity
 )
 interface ApplicationComponent {
     fun inject(activity: MainActivity)
-    fun inject(activity: RegisterActivity)
-    //fun inject(fragment: CurrDetailFragment)
+    fun inject(activity: AccountActivity)
+    fun inject(fragment: RegisterFragment)
+    fun inject(fragment: LoginFragment)
     fun inject(application: BeKindApp)
 
     @Component.Factory

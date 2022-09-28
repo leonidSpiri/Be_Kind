@@ -4,12 +4,12 @@ import androidx.lifecycle.ViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
-import ru.spiridonov.be.kind.presentation.viewmodels.RegisterViewModel
+import ru.spiridonov.be.kind.presentation.account.AccountViewModel
 
 @Module
 interface ViewModelModule {
     @Binds
     @IntoMap
-    @ViewModelKey(RegisterViewModel::class)
-    fun bindMainViewModel(viewModel: RegisterViewModel): ViewModel
+    @ViewModelKey(AccountViewModel::class)
+    fun bindAccountViewModel(viewModel: AccountViewModel): ViewModel
 }
