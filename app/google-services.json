@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "699132003157",
+    "project_id": "be-kind-be337",
+    "storage_bucket": "be-kind-be337.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:699132003157:android:90494df6f99e21030165dc",
+        "android_client_info": {
+          "package_name": "ru.spiridonov.be.kind"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "699132003157-7rshjipd47cl36mh942tjndmbkbbo2hg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdXkbcZbQj9M_sBngS22qYkSSJkbDAQPQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "699132003157-7rshjipd47cl36mh942tjndmbkbbo2hg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

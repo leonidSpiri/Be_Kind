@@ -1,5 +1,6 @@
 package ru.spiridonov.be.kind.domain.repository
 
+import ru.spiridonov.be.kind.domain.entity.AccountItem
 import ru.spiridonov.be.kind.domain.entity.InvalidItem
 import ru.spiridonov.be.kind.domain.entity.VolunteerItem
 
@@ -9,9 +10,9 @@ interface AccountRepository {
 
     fun loginVolunteer(login: String, password: String): VolunteerItem
 
-    fun registerInvalid(invalidItem: InvalidItem)
+    fun registerInvalid(accountItem: AccountItem): Boolean
 
-    fun registerVolunteer(volunteerItem: VolunteerItem)
+    fun registerVolunteer(accountItem: AccountItem): Boolean
 
     fun getExistingInvalidAccount(): InvalidItem?
 

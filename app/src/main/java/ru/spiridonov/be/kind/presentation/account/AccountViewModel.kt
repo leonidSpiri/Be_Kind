@@ -6,8 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.spiridonov.be.kind.domain.entity.AccountItem
-import ru.spiridonov.be.kind.domain.entity.InvalidItem
-import ru.spiridonov.be.kind.domain.entity.VolunteerItem
 import ru.spiridonov.be.kind.domain.usecases.account_item.RegisterInvalidUseCase
 import ru.spiridonov.be.kind.domain.usecases.account_item.RegisterVolunteerUseCase
 import javax.inject.Inject
@@ -50,9 +48,10 @@ class AccountViewModel @Inject constructor(
             viewModelScope.launch {
                 if (accountItem.type == INVALID_TYPE)
                     registerInvalidUseCase(
-                        InvalidItem(
-                            uuid = "",
+                        AccountItem(
+                            type = parseStroke(accountItem.type),
                             surName = parseStroke(accountItem.surName!!),
+                            password = parseStroke(accountItem.password),
                             name = parseStroke(accountItem.name!!),
                             lastname = parseStroke(accountItem.lastname!!),
                             personalPhone = parseStroke(accountItem.personalPhone!!),
@@ -64,9 +63,10 @@ class AccountViewModel @Inject constructor(
                     )
                 else
                     registerVolunteerUseCase(
-                        VolunteerItem(
-                            uuid = "",
+                        AccountItem(
+                            type = parseStroke(accountItem.type),
                             surName = parseStroke(accountItem.surName!!),
+                            password = parseStroke(accountItem.password),
                             name = parseStroke(accountItem.name!!),
                             lastname = parseStroke(accountItem.lastname!!),
                             personalPhone = parseStroke(accountItem.personalPhone!!),

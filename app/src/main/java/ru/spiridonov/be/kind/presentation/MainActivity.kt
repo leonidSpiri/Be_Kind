@@ -3,6 +3,8 @@ package ru.spiridonov.be.kind.presentation
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import ru.spiridonov.be.kind.BeKindApp
 import ru.spiridonov.be.kind.databinding.ActivityMainBinding
 import ru.spiridonov.be.kind.domain.usecases.account_item.GetExistingInvalidAccountUseCase
@@ -14,6 +16,9 @@ class MainActivity : AppCompatActivity() {
 
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
+    }
+    private val auth by lazy {
+        Firebase.auth
     }
 
     @Inject
@@ -32,6 +37,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         Log.d("MainActivity", getExistingInvalidAccountUseCase().toString())
         Log.d("MainActivity", getExistingVolunteerAccountUseCase().toString())
-        startActivity(AccountActivity.newIntentInvalid(this))
+        try {
+            val user = auth.currentUser
+            if (user == null)
+                startActivity(AccountActivity.newIntentInvalid(this))
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
     }
 }
