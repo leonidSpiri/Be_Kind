@@ -3,7 +3,6 @@ package ru.spiridonov.be.kind.presentation.account
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import ru.spiridonov.be.kind.BeKindApp
 import ru.spiridonov.be.kind.R
@@ -11,7 +10,8 @@ import ru.spiridonov.be.kind.databinding.ActivityAccountBinding
 import ru.spiridonov.be.kind.presentation.account.ui.LoginFragment
 import ru.spiridonov.be.kind.presentation.account.ui.RegisterFragment
 
-class AccountActivity : AppCompatActivity(), RegisterFragment.OnEditingFinished, LoginFragment.OnEditingFinished {
+class AccountActivity : AppCompatActivity(), RegisterFragment.OnEditingFinished,
+    LoginFragment.OnEditingFinished {
     private val binding by lazy {
         ActivityAccountBinding.inflate(layoutInflater)
     }
@@ -50,7 +50,6 @@ class AccountActivity : AppCompatActivity(), RegisterFragment.OnEditingFinished,
     }
 
     override fun onEditingFinished() {
-        Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show()
         finish()
     }
 

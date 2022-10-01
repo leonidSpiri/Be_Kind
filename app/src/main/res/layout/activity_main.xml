@@ -7,12 +7,55 @@
     tools:context=".presentation.MainActivity">
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello World!"
+        android:textSize="50dp"
+        android:textColor="#FFC107"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_login_invalid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Вход в аккаунт для лиц с ограниченными возможностями"
+        android:backgroundTint="#E6AE07"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"/>
+
+    <Button
+        android:id="@+id/btn_login_volunteer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Вход в аккаунт волонтера"
+        android:backgroundTint="#E6AE07"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_login_invalid"/>
+
+    <Button
+        android:id="@+id/btn_sign_out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Выйти"
+        android:backgroundTint="#E6AE07"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_login_volunteer"/>
+
+    <Button
+        android:id="@+id/btn_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Удалить"
+        android:backgroundTint="#E6AE07"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_sign_out"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

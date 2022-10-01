@@ -1,14 +1,12 @@
 package ru.spiridonov.be.kind.presentation
 
 import android.os.Bundle
-import android.util.Log
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import ru.spiridonov.be.kind.BeKindApp
 import ru.spiridonov.be.kind.databinding.ActivityMainBinding
-import ru.spiridonov.be.kind.domain.usecases.account_item.GetExistingInvalidAccountUseCase
-import ru.spiridonov.be.kind.domain.usecases.account_item.GetExistingVolunteerAccountUseCase
+import ru.spiridonov.be.kind.domain.usecases.account_item.*
 import ru.spiridonov.be.kind.presentation.account.AccountActivity
 import javax.inject.Inject
 
@@ -17,15 +15,27 @@ class MainActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
-    private val auth by lazy {
-        Firebase.auth
-    }
 
     @Inject
     lateinit var getExistingInvalidAccountUseCase: GetExistingInvalidAccountUseCase
 
     @Inject
     lateinit var getExistingVolunteerAccountUseCase: GetExistingVolunteerAccountUseCase
+
+    @Inject
+    lateinit var deleteAccountUseCase: DeleteAccountUseCase
+
+    @Inject
+    lateinit var isUserLoggedInUseCase: IsUserLoggedInUseCase
+
+    @Inject
+    lateinit var isUserVerifiedUseCase: IsUserVerifiedUseCase
+
+    @Inject
+    lateinit var logoutUseCase: LogoutUseCase
+
+    @Inject
+    lateinit var sendEmailVerificationUseCase: SendEmailVerificationUseCase
 
     private val component by lazy {
         (application as BeKindApp).component
@@ -35,17 +45,53 @@ class MainActivity : AppCompatActivity() {
         component.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        Log.d("MainActivity", getExistingInvalidAccountUseCase().toString())
-        Log.d("MainActivity", getExistingVolunteerAccountUseCase().toString())
-        try {
-            val user = auth.currentUser
-            if (user == null)
-                startActivity(AccountActivity.newIntentInvalid(this))
-        } catch (e: Exception) {
-            e.printStackTrace()
-            auth.signOut()
-            startActivity(AccountActivity.newIntentInvalid(this))
+        if (isUserLoggedInUseCase()) {
+            binding.btnLoginInvalid.visibility = View.GONE
+            binding.btnLoginVolunteer.visibility = View.GONE
+            if (!isUserVerifiedUseCase())
+                Toast.makeText(this, "Подтвердите почту", Toast.LENGTH_SHORT).show()
+            binding.textView.textSize = 20f
+            binding.textView.text = if (getExistingInvalidAccountUseCase() != null)
+                getExistingInvalidAccountUseCase().toString()
+            else
+                getExistingVolunteerAccountUseCase().toString()
+        } else {
+            binding.btnDelete.visibility = View.GONE
+            binding.btnSignOut.visibility = View.GONE
         }
-        startActivity(AccountActivity.newIntentInvalid(this))
+
+
+
+        with(binding) {
+            btnLoginInvalid.setOnClickListener {
+                startActivity(AccountActivity.newIntentInvalid(this@MainActivity))
+            }
+            btnLoginVolunteer.setOnClickListener {
+                startActivity(AccountActivity.newIntentVolunteer(this@MainActivity))
+            }
+            btnSignOut.setOnClickListener {
+                logoutUseCase()
+                recreate()
+            }
+            btnDelete.setOnClickListener {
+                if (isUserVerifiedUseCase()) {
+                    if (getExistingInvalidAccountUseCase()?.uuid?.let { uuid ->
+                            deleteAccountUseCase(
+                                uuid,
+                                null
+                            )
+                        } == true) recreate()
+                    else if (getExistingVolunteerAccountUseCase()?.uuid?.let { uuid ->
+                            deleteAccountUseCase(
+                                uuid, null
+                            )
+                        } == true) recreate()
+                } else {
+                    Toast.makeText(this@MainActivity, "Подтвердите почту", Toast.LENGTH_SHORT)
+                        .show()
+                    sendEmailVerificationUseCase()
+                }
+            }
+        }
     }
 }

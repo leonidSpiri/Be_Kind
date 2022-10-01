@@ -1,18 +1,23 @@
 package ru.spiridonov.be.kind.presentation.account
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.spiridonov.be.kind.domain.entity.AccountItem
+import ru.spiridonov.be.kind.domain.usecases.account_item.LoginInvalidUseCase
+import ru.spiridonov.be.kind.domain.usecases.account_item.LoginVolunteerUseCase
 import ru.spiridonov.be.kind.domain.usecases.account_item.RegisterInvalidUseCase
 import ru.spiridonov.be.kind.domain.usecases.account_item.RegisterVolunteerUseCase
 import javax.inject.Inject
 
 class AccountViewModel @Inject constructor(
     private val registerInvalidUseCase: RegisterInvalidUseCase,
-    private val registerVolunteerUseCase: RegisterVolunteerUseCase
+    private val registerVolunteerUseCase: RegisterVolunteerUseCase,
+    private val loginInvalidUseCase: LoginInvalidUseCase,
+    private val loginVolunteerUseCase: LoginVolunteerUseCase
 ) : ViewModel() {
 
     private val _errorInputEmail = MutableLiveData<Boolean>()
@@ -42,6 +47,9 @@ class AccountViewModel @Inject constructor(
     private val _shouldCloseScreen = MutableLiveData<Unit>()
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
+    private val _shouldCloseLoginScreen = MutableLiveData<String>()
+    val shouldCloseLoginScreen: LiveData<String>
+        get() = _shouldCloseLoginScreen
 
     fun registerAccount(accountItem: AccountItem) {
         if (validateInput(accountItem)) {
@@ -81,6 +89,40 @@ class AccountViewModel @Inject constructor(
         }
     }
 
+    fun loginAccount(accountItem: AccountItem) {
+        if (accountItem.email.isBlank()) {
+            _errorInputEmail.value = true
+            return
+        }
+        if (accountItem.password.isBlank() || accountItem.password.length < 6) {
+            _errorInputPassword.value = true
+            return
+        }
+        viewModelScope.launch {
+            if (accountItem.type == INVALID_TYPE) {
+                loginInvalidUseCase(
+                    accountItem.email,
+                    accountItem.password
+                ) { isGood, name ->
+                    if (isGood)
+                        _shouldCloseLoginScreen.setValue("Здравствуйте, $name")
+                    else
+                        _shouldCloseLoginScreen.setValue("Произошла ошибка:\n$name")
+                }
+            } else
+                loginVolunteerUseCase(
+                    accountItem.email,
+                    accountItem.password
+                ) { isGood, name ->
+                    if (isGood)
+                        _shouldCloseLoginScreen.setValue("Здравствуйте, $name")
+                    else
+                        _shouldCloseLoginScreen.setValue("Произошла ошибка:\n$name")
+                }
+        }
+
+    }
+
     private fun validateInput(accountItem: AccountItem): Boolean {
         var result = true
         with(accountItem) {
@@ -88,7 +130,7 @@ class AccountViewModel @Inject constructor(
                 _errorInputEmail.value = true
                 result = false
             }
-            if (password.isBlank()) {
+            if (password.isBlank() || password.length < 6) {
                 _errorInputPassword.value = true
                 result = false
             }
@@ -122,6 +164,7 @@ class AccountViewModel @Inject constructor(
 
 
     private fun parseStroke(input: String?) = input?.trim() ?: ""
+
     fun resetErrorInputEmail() {
         _errorInputEmail.value = false
     }

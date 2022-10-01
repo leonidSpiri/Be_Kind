@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import ru.spiridonov.be.kind.data.mapper.AccountItemMapper
 import ru.spiridonov.be.kind.domain.entity.AccountItem
@@ -29,6 +30,7 @@ class AccountRepositoryImpl @Inject constructor(
         password: String,
         callback: (Boolean, String) -> Unit
     ) {
+        Log.d("AccountRepositoryImpl", "loginInvalid")
         auth.signInWithEmailAndPassword(login, password).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 db.collection("users").document("UsersCollection").collection("invalids")
@@ -39,9 +41,13 @@ class AccountRepositoryImpl @Inject constructor(
                                 "AccountRepositoryImpl",
                                 "DocumentSnapshot data: ${document.data}"
                             )
-                            val invalidItem = document.toObject(InvalidItem::class.java)
+                            val invalidItem = document.toObject<InvalidItem>()
                             invalidItem?.let {
                                 sharedPref.setInvalidAccountInfo(it)
+                                Log.d(
+                                    "AccountRepositoryImpl",
+                                    "DocumentSnapshot data: ${sharedPref.getInvalidAccountInfo()}"
+                                )
                                 callback.invoke(true, it.name)
                             }
                         } else {
@@ -73,24 +79,29 @@ class AccountRepositoryImpl @Inject constructor(
                     .collection("volunteers")
                     .document(auth.currentUser!!.uid).get()
                     .addOnSuccessListener { document ->
-                        if (document != null) {
+                        if (document != null && document.data != null) {
                             Log.d(
                                 "AccountRepositoryImpl",
                                 "DocumentSnapshot data: ${document.data}"
                             )
-                            val volunteerItem = document.toObject(VolunteerItem::class.java)
+                            val volunteerItem = document.toObject<VolunteerItem>()
                             volunteerItem?.let {
                                 sharedPref.setVolunteerAccountInfo(it)
                                 callback.invoke(true, it.name)
                             }
                         } else {
                             Log.d("AccountRepositoryImpl", "No such document")
+                            logout()
                             callback.invoke(false, "Информация о пользователе не найдена")
                         }
                     }
                     .addOnFailureListener { exception ->
                         Log.d("AccountRepositoryImpl", "get failed with ", exception)
-                        callback.invoke(false, "Ошибка получения информации о пользователе")
+                        logout()
+                        callback.invoke(
+                            false, "Ошибка получения информации о пользователе\n" +
+                                    "\${exception.message}"
+                        )
                     }
             }
         }
@@ -204,20 +215,21 @@ class AccountRepositoryImpl @Inject constructor(
                     "deleteAccount: failure" +
                             " ${it.exception?.message}"
                 )
-            }
+            } else
+                auth.currentUser?.delete()
         }
         userCollection.collection("invalids")
-            .document(uuid).delete()
+            .document(auth.currentUser?.uid!!).delete()
             .addOnCompleteListener {
                 completeListener(it)
             }
 
         userCollection.collection("volunteers")
-            .document(uuid).delete()
+            .document(auth.currentUser?.uid!!).delete()
             .addOnCompleteListener {
                 completeListener(it)
             }
-        auth.currentUser?.delete()
+
         return true
     }
 
@@ -249,8 +261,9 @@ class AccountRepositoryImpl @Inject constructor(
     override fun sendEmailVerification() {
         val user = auth.currentUser
         user?.sendEmailVerification()?.addOnCompleteListener { taskEmail ->
-            if (taskEmail.isSuccessful)
+            if (taskEmail.isSuccessful) {
                 Log.d("AccountRepositoryImpl", "Email sent.")
+            }
             else
                 Log.d("AccountRepositoryImpl", "Email not sent. ${taskEmail.exception?.message}")
         }

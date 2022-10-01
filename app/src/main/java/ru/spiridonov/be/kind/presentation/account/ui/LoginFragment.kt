@@ -2,14 +2,18 @@ package ru.spiridonov.be.kind.presentation.account.ui
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import ru.spiridonov.be.kind.BeKindApp
 import ru.spiridonov.be.kind.R
 import ru.spiridonov.be.kind.databinding.FragmentLoginBinding
+import ru.spiridonov.be.kind.domain.entity.AccountItem
 import ru.spiridonov.be.kind.presentation.account.AccountViewModel
 import ru.spiridonov.be.kind.presentation.viewmodels.ViewModelFactory
 import javax.inject.Inject
@@ -54,12 +58,25 @@ class LoginFragment : Fragment() {
         viewModel = ViewModelProvider(this, viewModelFactory)[AccountViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        listenerRegisterBtn()
+        buttonListener()
+        addTextChangeListeners()
+        observeViewModel()
     }
 
-    private fun listenerRegisterBtn() =
-        binding.register.setOnClickListener {
-            launchRegisterMode()
+    private fun buttonListener() =
+        with(binding) {
+            login.setOnClickListener {
+                viewModel?.loginAccount(
+                    AccountItem(
+                        type = registerType,
+                        email = etEmail.text.toString(),
+                        password = etPassword.text.toString(),
+                    )
+                )
+            }
+            register.setOnClickListener {
+                launchRegisterMode()
+            }
         }
 
     private fun launchRegisterMode() {
@@ -73,6 +90,38 @@ class LoginFragment : Fragment() {
             .commit()
     }
 
+    private fun observeViewModel() {
+        viewModel.shouldCloseLoginScreen.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+            onEditingFinishedListener.onEditingFinished()
+        }
+    }
+
+    private fun addTextChangeListeners() =
+        with(binding) {
+            etEmail.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    viewModel?.resetErrorInputEmail()
+                }
+
+                override fun afterTextChanged(p0: Editable?) {
+                }
+            })
+            etPassword.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    viewModel?.resetErrorInputPassword()
+                }
+
+                override fun afterTextChanged(p0: Editable?) {
+                }
+            })
+        }
 
     private fun parseParams() {
         val args = requireArguments()
