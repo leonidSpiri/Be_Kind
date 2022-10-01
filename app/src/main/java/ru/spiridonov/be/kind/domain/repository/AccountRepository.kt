@@ -6,9 +6,9 @@ import ru.spiridonov.be.kind.domain.entity.VolunteerItem
 
 interface AccountRepository {
 
-    fun loginInvalid(login: String, password: String): InvalidItem
+    fun loginInvalid(login: String, password: String, callback: (Boolean, String) -> Unit)
 
-    fun loginVolunteer(login: String, password: String): VolunteerItem
+    fun loginVolunteer(login: String, password: String, callback: (Boolean, String) -> Unit)
 
     fun registerInvalid(accountItem: AccountItem): Boolean
 
@@ -18,5 +18,18 @@ interface AccountRepository {
 
     fun getExistingVolunteerAccount(): VolunteerItem?
 
-    fun deleteAccount(uuid: String, reason: String): Boolean
+    fun deleteAccount(uuid: String, reason: String?): Boolean
+
+    fun logout()
+
+    fun isUserLoggedIn(): Boolean
+
+    fun isUserVerified(): Boolean
+
+    fun sendEmailVerification()
+
+    fun createDatabaseInfoUser(invalidItem: InvalidItem?, volunteerItem: VolunteerItem?)
+
 }
+
+//inline fun AccountRepository.bar(a: () -> Unit) { a() }

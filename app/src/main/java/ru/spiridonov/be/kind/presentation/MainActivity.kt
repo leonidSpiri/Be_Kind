@@ -43,7 +43,9 @@ class MainActivity : AppCompatActivity() {
                 startActivity(AccountActivity.newIntentInvalid(this))
         } catch (e: Exception) {
             e.printStackTrace()
+            auth.signOut()
+            startActivity(AccountActivity.newIntentInvalid(this))
         }
-
+        startActivity(AccountActivity.newIntentInvalid(this))
     }
 }

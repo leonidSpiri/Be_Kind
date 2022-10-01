@@ -144,4 +144,13 @@ class SharedPref @Inject constructor() {
             context.getSharedPreferences("be_kind_account_volunteer", Context.MODE_PRIVATE).edit()
                 .putBoolean("isAccountConfirmed", isAccountConfirmed).apply()
         }
+
+    fun deleteInvalidAccountInfo() =
+        context.getSharedPreferences("be_kind_account_invalid", Context.MODE_PRIVATE).edit()
+            .clear().apply()
+
+    fun deleteVolunteerAccountInfo() =
+        context.getSharedPreferences("be_kind_account_volunteer", Context.MODE_PRIVATE).edit()
+            .clear().apply()
+
 }

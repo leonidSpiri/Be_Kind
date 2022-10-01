@@ -14,7 +14,7 @@ class InvalidItemRepositoryImpl @Inject constructor(
 
     override fun getInvalidItem(): InvalidItem? {
         val item = sharedPref.getInvalidAccountInfo()
-       // if (item.uuid.isEmpty()) return null
+        if (item.uuid.isEmpty()) return null
         return item
     }
 }

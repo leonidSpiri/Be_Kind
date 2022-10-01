@@ -1,9 +1,9 @@
 package ru.spiridonov.be.kind.data.repository
 
-import android.app.Application
 import android.util.Log
-import android.widget.Toast
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import ru.spiridonov.be.kind.data.mapper.AccountItemMapper
 import ru.spiridonov.be.kind.domain.entity.AccountItem
@@ -14,20 +14,86 @@ import ru.spiridonov.be.kind.utils.SharedPref
 import javax.inject.Inject
 
 class AccountRepositoryImpl @Inject constructor(
-    private val application: Application,
     private val sharedPref: SharedPref,
     private val accountItemMapper: AccountItemMapper,
 ) : AccountRepository {
     private val auth by lazy {
         Firebase.auth
     }
-
-    override fun loginInvalid(login: String, password: String): InvalidItem {
-        TODO("Not yet implemented")
+    private val db by lazy {
+        Firebase.firestore
     }
 
-    override fun loginVolunteer(login: String, password: String): VolunteerItem {
-        TODO("Not yet implemented")
+    override fun loginInvalid(
+        login: String,
+        password: String,
+        callback: (Boolean, String) -> Unit
+    ) {
+        auth.signInWithEmailAndPassword(login, password).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                db.collection("users").document("UsersCollection").collection("invalids")
+                    .document(auth.currentUser!!.uid).get()
+                    .addOnSuccessListener { document ->
+                        if (document != null) {
+                            Log.d(
+                                "AccountRepositoryImpl",
+                                "DocumentSnapshot data: ${document.data}"
+                            )
+                            val invalidItem = document.toObject(InvalidItem::class.java)
+                            invalidItem?.let {
+                                sharedPref.setInvalidAccountInfo(it)
+                                callback.invoke(true, it.name)
+                            }
+                        } else {
+                            Log.d("AccountRepositoryImpl", "No such document")
+                            callback.invoke(false, "Информация о пользователе не найдена")
+                        }
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.d("AccountRepositoryImpl", "get failed with ", exception)
+                        callback.invoke(false, "Ошибка получения информации о пользователе")
+                    }
+
+
+            } else {
+                Log.w("AccountRepositoryImpl", "signInWithEmail:failure", task.exception)
+                callback.invoke(false, "Ошибка авторизации")
+            }
+        }
+    }
+
+    override fun loginVolunteer(
+        login: String,
+        password: String,
+        callback: (Boolean, String) -> Unit
+    ) {
+        auth.signInWithEmailAndPassword(login, password).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                db.collection("users").document("UsersCollection")
+                    .collection("volunteers")
+                    .document(auth.currentUser!!.uid).get()
+                    .addOnSuccessListener { document ->
+                        if (document != null) {
+                            Log.d(
+                                "AccountRepositoryImpl",
+                                "DocumentSnapshot data: ${document.data}"
+                            )
+                            val volunteerItem = document.toObject(VolunteerItem::class.java)
+                            volunteerItem?.let {
+                                sharedPref.setVolunteerAccountInfo(it)
+                                callback.invoke(true, it.name)
+                            }
+                        } else {
+                            Log.d("AccountRepositoryImpl", "No such document")
+                            callback.invoke(false, "Информация о пользователе не найдена")
+                        }
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.d("AccountRepositoryImpl", "get failed with ", exception)
+                        callback.invoke(false, "Ошибка получения информации о пользователе")
+                    }
+            }
+        }
     }
 
     override fun registerInvalid(accountItem: AccountItem): Boolean {
@@ -37,23 +103,12 @@ class AccountRepositoryImpl @Inject constructor(
                     Log.d("AccountRepositoryImpl", "registerInvalid: success")
                     val user = auth.currentUser
                     if (user != null) {
-                        user.sendEmailVerification()
-                            .addOnCompleteListener { taskEmail ->
-                                if (taskEmail.isSuccessful) {
-                                    Toast.makeText(
-                                        application,
-                                        "На почту выслано подтверждение",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    Log.d("AccountRepositoryImpl", "Email sent.")
-                                }
-                            }
-
-                        sharedPref.setInvalidAccountInfo(
+                        sendEmailVerification()
+                        createDatabaseInfoUser(
                             accountItemMapper.mapAccountItemToInvalidItem(
                                 user.uid,
                                 accountItem
-                            )
+                            ), null
                         )
                     }
                 } else {
@@ -74,23 +129,10 @@ class AccountRepositoryImpl @Inject constructor(
                     Log.d("AccountRepositoryImpl", "registerVolunteer: success")
                     val user = auth.currentUser
                     if (user != null) {
-                        user.sendEmailVerification()
-                            .addOnCompleteListener { taskEmail ->
-                                if (taskEmail.isSuccessful) {
-                                    Toast.makeText(
-                                        application,
-                                        "На почту выслано подтверждение",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    Log.d("AccountRepositoryImpl", "Email sent.")
-                                }
-                            }
-
-                        sharedPref.setVolunteerAccountInfo(
-                            accountItemMapper.mapAccountItemToVolunteerItem(
-                                user.uid,
-                                accountItem
-                            )
+                        sendEmailVerification()
+                        createDatabaseInfoUser(
+                            null,
+                            accountItemMapper.mapAccountItemToVolunteerItem(user.uid, accountItem)
                         )
                     }
                 } else {
@@ -118,7 +160,99 @@ class AccountRepositoryImpl @Inject constructor(
         return item
     }
 
-    override fun deleteAccount(uuid: String, reason: String): Boolean {
-        TODO("Not yet implemented")
+    override fun createDatabaseInfoUser(
+        invalidItem: InvalidItem?,
+        volunteerItem: VolunteerItem?
+    ) {
+        if (invalidItem != null && volunteerItem == null) {
+            sharedPref.setInvalidAccountInfo(invalidItem)
+            db.collection("users").document("UsersCollection")
+                .collection("invalids")
+                .document(invalidItem.uuid).set(invalidItem)
+                .addOnCompleteListener {
+                    if (!it.isSuccessful) {
+                        auth.currentUser?.let { uuid -> deleteAccount(uuid.uid, null) }
+                        throw RuntimeException(
+                            "createDatabaseInfoUser: failure" +
+                                    " ${it.exception?.message}"
+                        )
+                    }
+                }
+
+        } else if (volunteerItem != null && invalidItem == null) {
+            sharedPref.setVolunteerAccountInfo(volunteerItem)
+            db.collection("users").document("UsersCollection")
+                .collection("volunteers")
+                .document(volunteerItem.uuid).set(volunteerItem)
+                .addOnCompleteListener {
+                    if (!it.isSuccessful) {
+                        auth.currentUser?.let { uuid -> deleteAccount(uuid.uid, null) }
+                        throw RuntimeException(
+                            "createDatabaseInfoUser: failure" +
+                                    " ${it.exception?.message}"
+                        )
+                    }
+                }
+        }
+    }
+
+    override fun deleteAccount(uuid: String, reason: String?): Boolean {
+        val userCollection = db.collection("users").document("UsersCollection")
+        val completeListener = { it: Task<Void> ->
+            if (!it.isSuccessful) {
+                throw RuntimeException(
+                    "deleteAccount: failure" +
+                            " ${it.exception?.message}"
+                )
+            }
+        }
+        userCollection.collection("invalids")
+            .document(uuid).delete()
+            .addOnCompleteListener {
+                completeListener(it)
+            }
+
+        userCollection.collection("volunteers")
+            .document(uuid).delete()
+            .addOnCompleteListener {
+                completeListener(it)
+            }
+        auth.currentUser?.delete()
+        return true
+    }
+
+    override fun logout() {
+        try {
+            auth.signOut()
+            sharedPref.deleteInvalidAccountInfo()
+            sharedPref.deleteVolunteerAccountInfo()
+        } catch (e: Exception) {
+            Log.d("AccountRepositoryImpl", "logout: ${e.message}")
+        }
+    }
+
+    override fun isUserLoggedIn(): Boolean {
+        return try {
+            val currentUser = auth.currentUser
+            currentUser != null
+        } catch (e: Exception) {
+            Log.d("AccountRepositoryImpl", "isUserLoggedIn: ${e.message}")
+            false
+        }
+    }
+
+    override fun isUserVerified(): Boolean {
+        val user = auth.currentUser
+        return user?.isEmailVerified ?: false
+    }
+
+    override fun sendEmailVerification() {
+        val user = auth.currentUser
+        user?.sendEmailVerification()?.addOnCompleteListener { taskEmail ->
+            if (taskEmail.isSuccessful)
+                Log.d("AccountRepositoryImpl", "Email sent.")
+            else
+                Log.d("AccountRepositoryImpl", "Email not sent. ${taskEmail.exception?.message}")
+        }
     }
 }

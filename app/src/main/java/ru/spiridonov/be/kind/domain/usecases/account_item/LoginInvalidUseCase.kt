@@ -6,5 +6,6 @@ import javax.inject.Inject
 class LoginInvalidUseCase @Inject constructor(
     private val repository: AccountRepository
 ) {
-    operator fun invoke(login: String, password: String) = repository.loginInvalid(login, password)
+    operator fun invoke(login: String, password: String, callback: (Boolean, String) -> Unit) =
+        repository.loginInvalid(login, password, callback)
 }

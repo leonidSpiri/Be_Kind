@@ -14,7 +14,7 @@ class AccountItemMapper @Inject constructor() {
             name = accountItem.name.toString(),
             lastname = accountItem.lastname.toString(),
             personalPhone = accountItem.personalPhone.toString(),
-            relativePhone = accountItem.relativePhone.toString(),
+            relativePhone = accountItem.relativePhone,
             email = accountItem.email,
             birthday = accountItem.birthday.toString(),
             city = accountItem.city.toString(),

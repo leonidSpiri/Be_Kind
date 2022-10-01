@@ -6,5 +6,6 @@ import javax.inject.Inject
 class LoginVolunteerUseCase @Inject constructor(
     private val repository: AccountRepository
 ) {
-    operator fun invoke(login: String, password: String) = repository.loginVolunteer(login, password)
+    operator fun invoke(login: String, password: String, callback: (Boolean, String) -> Unit) =
+        repository.loginVolunteer(login, password, callback)
 }
