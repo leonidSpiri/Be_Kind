@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import ru.spiridonov.be.kind.BeKindApp
 import ru.spiridonov.be.kind.databinding.ActivityMainBinding
 import ru.spiridonov.be.kind.domain.usecases.account_item.*
+import ru.spiridonov.be.kind.domain.usecases.invalid_item.GetInvalidItemUseCase
+import ru.spiridonov.be.kind.domain.usecases.volunteer_item.GetVolunteerItemUseCase
 import ru.spiridonov.be.kind.presentation.account.AccountActivity
 import javax.inject.Inject
 
@@ -17,10 +19,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Inject
-    lateinit var getExistingInvalidAccountUseCase: GetExistingInvalidAccountUseCase
+    lateinit var getInvalidItemUseCase: GetInvalidItemUseCase
 
     @Inject
-    lateinit var getExistingVolunteerAccountUseCase: GetExistingVolunteerAccountUseCase
+    lateinit var getVolunteerItemUseCase: GetVolunteerItemUseCase
 
     @Inject
     lateinit var deleteAccountUseCase: DeleteAccountUseCase
@@ -51,10 +53,10 @@ class MainActivity : AppCompatActivity() {
             if (!isUserVerifiedUseCase())
                 Toast.makeText(this, "Подтвердите почту", Toast.LENGTH_SHORT).show()
             binding.textView.textSize = 20f
-            binding.textView.text = if (getExistingInvalidAccountUseCase() != null)
-                getExistingInvalidAccountUseCase().toString()
+            binding.textView.text = if (getInvalidItemUseCase() != null)
+                getInvalidItemUseCase().toString()
             else
-                getExistingVolunteerAccountUseCase().toString()
+                getVolunteerItemUseCase().toString()
         } else {
             binding.btnDelete.visibility = View.GONE
             binding.btnSignOut.visibility = View.GONE
@@ -75,13 +77,13 @@ class MainActivity : AppCompatActivity() {
             }
             btnDelete.setOnClickListener {
                 if (isUserVerifiedUseCase()) {
-                    if (getExistingInvalidAccountUseCase()?.uuid?.let { uuid ->
+                    if (getInvalidItemUseCase()?.uuid?.let { uuid ->
                             deleteAccountUseCase(
                                 uuid,
                                 null
                             )
                         } == true) recreate()
-                    else if (getExistingVolunteerAccountUseCase()?.uuid?.let { uuid ->
+                    else if (getVolunteerItemUseCase()?.uuid?.let { uuid ->
                             deleteAccountUseCase(
                                 uuid, null
                             )

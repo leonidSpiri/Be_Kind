@@ -30,41 +30,37 @@ class AccountRepositoryImpl @Inject constructor(
         password: String,
         callback: (Boolean, String) -> Unit
     ) {
-        Log.d("AccountRepositoryImpl", "loginInvalid")
         auth.signInWithEmailAndPassword(login, password).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 db.collection("users").document("UsersCollection").collection("invalids")
                     .document(auth.currentUser!!.uid).get()
                     .addOnSuccessListener { document ->
                         if (document != null) {
-                            Log.d(
-                                "AccountRepositoryImpl",
-                                "DocumentSnapshot data: ${document.data}"
-                            )
                             val invalidItem = document.toObject<InvalidItem>()
                             invalidItem?.let {
-                                sharedPref.setInvalidAccountInfo(it)
-                                Log.d(
-                                    "AccountRepositoryImpl",
-                                    "DocumentSnapshot data: ${sharedPref.getInvalidAccountInfo()}"
-                                )
+                                if (isUserVerified())
+                                    sharedPref.setInvalidAccountInfo(it.copy(isAccountConfirmed = true))
+                                else
+                                    sharedPref.setInvalidAccountInfo(it.copy(isAccountConfirmed = false))
+
                                 callback.invoke(true, it.name)
                             }
                         } else {
-                            Log.d("AccountRepositoryImpl", "No such document")
+                            logout()
                             callback.invoke(false, "Информация о пользователе не найдена")
                         }
                     }
-                    .addOnFailureListener { exception ->
-                        Log.d("AccountRepositoryImpl", "get failed with ", exception)
+                    .addOnFailureListener {
+                        logout()
                         callback.invoke(false, "Ошибка получения информации о пользователе")
                     }
 
 
-            } else {
-                Log.w("AccountRepositoryImpl", "signInWithEmail:failure", task.exception)
-                callback.invoke(false, "Ошибка авторизации")
-            }
+            } else
+                callback.invoke(
+                    false, "Ошибка получения информации о пользователе\n" +
+                            "Пользователь не найден"
+                )
         }
     }
 
@@ -80,30 +76,31 @@ class AccountRepositoryImpl @Inject constructor(
                     .document(auth.currentUser!!.uid).get()
                     .addOnSuccessListener { document ->
                         if (document != null && document.data != null) {
-                            Log.d(
-                                "AccountRepositoryImpl",
-                                "DocumentSnapshot data: ${document.data}"
-                            )
                             val volunteerItem = document.toObject<VolunteerItem>()
                             volunteerItem?.let {
-                                sharedPref.setVolunteerAccountInfo(it)
+                                if (isUserVerified())
+                                    sharedPref.setVolunteerAccountInfo(it.copy(isAccountConfirmed = true))
+                                else
+                                    sharedPref.setVolunteerAccountInfo(it.copy(isAccountConfirmed = false))
                                 callback.invoke(true, it.name)
                             }
                         } else {
-                            Log.d("AccountRepositoryImpl", "No such document")
                             logout()
                             callback.invoke(false, "Информация о пользователе не найдена")
                         }
                     }
-                    .addOnFailureListener { exception ->
-                        Log.d("AccountRepositoryImpl", "get failed with ", exception)
+                    .addOnFailureListener {
                         logout()
                         callback.invoke(
                             false, "Ошибка получения информации о пользователе\n" +
                                     "\${exception.message}"
                         )
                     }
-            }
+            } else
+                callback.invoke(
+                    false, "Ошибка получения информации о пользователе\n" +
+                            "Пользователь не найден"
+                )
         }
     }
 
@@ -111,7 +108,6 @@ class AccountRepositoryImpl @Inject constructor(
         auth.createUserWithEmailAndPassword(accountItem.email, accountItem.password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.d("AccountRepositoryImpl", "registerInvalid: success")
                     val user = auth.currentUser
                     if (user != null) {
                         sendEmailVerification()
@@ -123,7 +119,6 @@ class AccountRepositoryImpl @Inject constructor(
                         )
                     }
                 } else {
-                    Log.d("AccountRepositoryImpl", "registerInvalid: failure")
                     throw RuntimeException(
                         "registerInvalid: failure" +
                                 " ${task.exception?.message}"
@@ -137,7 +132,6 @@ class AccountRepositoryImpl @Inject constructor(
         auth.createUserWithEmailAndPassword(accountItem.email, accountItem.password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.d("AccountRepositoryImpl", "registerVolunteer: success")
                     val user = auth.currentUser
                     if (user != null) {
                         sendEmailVerification()
@@ -147,7 +141,6 @@ class AccountRepositoryImpl @Inject constructor(
                         )
                     }
                 } else {
-                    Log.d("AccountRepositoryImpl", "registerVolunteer: failure")
                     throw RuntimeException(
                         "registerVolunteer: failure" +
                                 " ${task.exception?.message}"
@@ -155,20 +148,6 @@ class AccountRepositoryImpl @Inject constructor(
                 }
             }
         return true
-    }
-
-    override fun getExistingInvalidAccount(): InvalidItem? {
-        val item = sharedPref.getInvalidAccountInfo()
-        val currentUser = auth.currentUser
-        if (item.uuid.isEmpty() && currentUser != null) return null
-        return item
-    }
-
-    override fun getExistingVolunteerAccount(): VolunteerItem? {
-        val item = sharedPref.getVolunteerAccountInfo()
-        val currentUser = auth.currentUser
-        if (item.uuid.isEmpty() && currentUser != null) return null
-        return item
     }
 
     override fun createDatabaseInfoUser(
@@ -263,8 +242,7 @@ class AccountRepositoryImpl @Inject constructor(
         user?.sendEmailVerification()?.addOnCompleteListener { taskEmail ->
             if (taskEmail.isSuccessful) {
                 Log.d("AccountRepositoryImpl", "Email sent.")
-            }
-            else
+            } else
                 Log.d("AccountRepositoryImpl", "Email not sent. ${taskEmail.exception?.message}")
         }
     }

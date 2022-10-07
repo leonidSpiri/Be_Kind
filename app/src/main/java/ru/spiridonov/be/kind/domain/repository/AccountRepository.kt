@@ -14,10 +14,6 @@ interface AccountRepository {
 
     fun registerVolunteer(accountItem: AccountItem): Boolean
 
-    fun getExistingInvalidAccount(): InvalidItem?
-
-    fun getExistingVolunteerAccount(): VolunteerItem?
-
     fun deleteAccount(uuid: String, reason: String?): Boolean
 
     fun logout()
@@ -31,5 +27,3 @@ interface AccountRepository {
     fun createDatabaseInfoUser(invalidItem: InvalidItem?, volunteerItem: VolunteerItem?)
 
 }
-
-//inline fun AccountRepository.bar(a: () -> Unit) { a() }

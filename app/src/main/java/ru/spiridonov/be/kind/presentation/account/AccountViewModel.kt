@@ -1,6 +1,5 @@
 package ru.spiridonov.be.kind.presentation.account
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -107,7 +106,7 @@ class AccountViewModel @Inject constructor(
                     if (isGood)
                         _shouldCloseLoginScreen.setValue("Здравствуйте, $name")
                     else
-                        _shouldCloseLoginScreen.setValue("Произошла ошибка:\n$name")
+                        _shouldCloseLoginScreen.setValue(name)
                 }
             } else
                 loginVolunteerUseCase(
@@ -117,7 +116,7 @@ class AccountViewModel @Inject constructor(
                     if (isGood)
                         _shouldCloseLoginScreen.setValue("Здравствуйте, $name")
                     else
-                        _shouldCloseLoginScreen.setValue("Произошла ошибка:\n$name")
+                        _shouldCloseLoginScreen.setValue(name)
                 }
         }
 
@@ -161,7 +160,6 @@ class AccountViewModel @Inject constructor(
         }
         return result
     }
-
 
     private fun parseStroke(input: String?) = input?.trim() ?: ""
 
