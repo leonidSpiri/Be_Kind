@@ -8,6 +8,7 @@ import ru.spiridonov.be.kind.presentation.MainActivity
 import ru.spiridonov.be.kind.presentation.account.AccountActivity
 import ru.spiridonov.be.kind.presentation.account.ui.LoginFragment
 import ru.spiridonov.be.kind.presentation.account.ui.RegisterFragment
+import ru.spiridonov.be.kind.presentation.account.ui.VerifiedUserFragment
 
 @ApplicationScope
 @Component(
@@ -21,6 +22,7 @@ interface ApplicationComponent {
     fun inject(activity: MainActivity)
     fun inject(activity: AccountActivity)
     fun inject(fragment: RegisterFragment)
+    fun inject(fragment: VerifiedUserFragment)
     fun inject(fragment: LoginFragment)
     fun inject(application: BeKindApp)
 
