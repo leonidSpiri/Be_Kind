@@ -1,5 +1,7 @@
 package ru.spiridonov.be.kind.presentation.account
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -27,11 +29,30 @@ class UserProfileActivity : AppCompatActivity() {
         setContentView(binding.root)
         viewModel = ViewModelProvider(this, viewModelFactory)[AccountViewModel::class.java]
         observeViewModel()
+        buttonClickListener()
     }
 
     private fun observeViewModel() {
         viewModel.getUserInfo()?.let {
             binding.accountItem = it
         }
+    }
+
+    private fun buttonClickListener() {
+        with(binding) {
+            btnLogout.setOnClickListener {
+                viewModel.logout()
+                finish()
+            }
+            btnDelete.setOnClickListener {
+                if (viewModel.deleteAccount()) finish()
+            }
+        }
+    }
+
+    companion object {
+        fun newIntent(context: Context) =
+            Intent(context, UserProfileActivity::class.java)
+
     }
 }

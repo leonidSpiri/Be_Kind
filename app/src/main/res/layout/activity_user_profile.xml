@@ -231,6 +231,40 @@
                         android:visibility="gone" />
                 </RelativeLayout>
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_logout"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/logout"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:padding="15dp"
+                    android:textAlignment="center"
+                    android:textColor="@color/orange"
+                    android:textSize="20sp"
+                    android:theme="@style/Platform.MaterialComponents"
+                    app:cornerRadius="5dp"
+                    app:strokeColor="@color/white"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_delete"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/delete"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:padding="15dp"
+                    android:textAlignment="center"
+                    android:textColor="@color/orange"
+                    android:textSize="20sp"
+                    android:theme="@style/Platform.MaterialComponents"
+                    app:cornerRadius="5dp"
+                    app:strokeColor="@color/white"/>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

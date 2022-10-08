@@ -2,14 +2,12 @@ package ru.spiridonov.be.kind.presentation
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import ru.spiridonov.be.kind.BeKindApp
 import ru.spiridonov.be.kind.databinding.ActivityMainBinding
-import ru.spiridonov.be.kind.domain.usecases.account_item.*
-import ru.spiridonov.be.kind.domain.usecases.invalid_item.GetInvalidItemUseCase
-import ru.spiridonov.be.kind.domain.usecases.volunteer_item.GetVolunteerItemUseCase
+import ru.spiridonov.be.kind.domain.usecases.account_item.IsUserLoggedInUseCase
 import ru.spiridonov.be.kind.presentation.account.AccountActivity
+import ru.spiridonov.be.kind.presentation.account.UserProfileActivity
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -19,25 +17,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Inject
-    lateinit var getInvalidItemUseCase: GetInvalidItemUseCase
-
-    @Inject
-    lateinit var getVolunteerItemUseCase: GetVolunteerItemUseCase
-
-    @Inject
-    lateinit var deleteAccountUseCase: DeleteAccountUseCase
-
-    @Inject
     lateinit var isUserLoggedInUseCase: IsUserLoggedInUseCase
-
-    @Inject
-    lateinit var isUserVerifiedUseCase: IsUserVerifiedUseCase
-
-    @Inject
-    lateinit var logoutUseCase: LogoutUseCase
-
-    @Inject
-    lateinit var sendEmailVerificationUseCase: SendEmailVerificationUseCase
 
     private val component by lazy {
         (application as BeKindApp).component
@@ -50,16 +30,11 @@ class MainActivity : AppCompatActivity() {
         if (isUserLoggedInUseCase()) {
             binding.btnLoginInvalid.visibility = View.GONE
             binding.btnLoginVolunteer.visibility = View.GONE
-            if (!isUserVerifiedUseCase())
-                Toast.makeText(this, "Подтвердите почту", Toast.LENGTH_SHORT).show()
-            binding.textView.textSize = 20f
-            binding.textView.text = if (getInvalidItemUseCase() != null)
-                getInvalidItemUseCase().toString()
-            else
-                getVolunteerItemUseCase().toString()
+            binding.btnUserProfile.visibility = View.VISIBLE
         } else {
-            binding.btnDelete.visibility = View.GONE
-            binding.btnSignOut.visibility = View.GONE
+            binding.btnUserProfile.visibility = View.GONE
+            binding.btnLoginInvalid.visibility = View.VISIBLE
+            binding.btnLoginVolunteer.visibility = View.VISIBLE
         }
 
 
@@ -71,28 +46,8 @@ class MainActivity : AppCompatActivity() {
             btnLoginVolunteer.setOnClickListener {
                 startActivity(AccountActivity.newIntentVolunteer(this@MainActivity))
             }
-            btnSignOut.setOnClickListener {
-                logoutUseCase()
-                recreate()
-            }
-            btnDelete.setOnClickListener {
-                if (isUserVerifiedUseCase()) {
-                    if (getInvalidItemUseCase()?.uuid?.let { uuid ->
-                            deleteAccountUseCase(
-                                uuid,
-                                null
-                            )
-                        } == true) recreate()
-                    else if (getVolunteerItemUseCase()?.uuid?.let { uuid ->
-                            deleteAccountUseCase(
-                                uuid, null
-                            )
-                        } == true) recreate()
-                } else {
-                    Toast.makeText(this@MainActivity, "Подтвердите почту", Toast.LENGTH_SHORT)
-                        .show()
-                    sendEmailVerificationUseCase()
-                }
+            btnUserProfile.setOnClickListener {
+                startActivity(UserProfileActivity.newIntent(this@MainActivity))
             }
         }
     }

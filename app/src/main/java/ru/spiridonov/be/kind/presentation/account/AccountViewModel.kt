@@ -1,5 +1,7 @@
 package ru.spiridonov.be.kind.presentation.account
 
+import android.app.Application
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,15 +9,13 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.spiridonov.be.kind.data.mapper.AccountItemMapper
 import ru.spiridonov.be.kind.domain.entity.AccountItem
-import ru.spiridonov.be.kind.domain.usecases.account_item.LoginInvalidUseCase
-import ru.spiridonov.be.kind.domain.usecases.account_item.LoginVolunteerUseCase
-import ru.spiridonov.be.kind.domain.usecases.account_item.RegisterInvalidUseCase
-import ru.spiridonov.be.kind.domain.usecases.account_item.RegisterVolunteerUseCase
+import ru.spiridonov.be.kind.domain.usecases.account_item.*
 import ru.spiridonov.be.kind.domain.usecases.invalid_item.GetInvalidItemUseCase
 import ru.spiridonov.be.kind.domain.usecases.volunteer_item.GetVolunteerItemUseCase
 import javax.inject.Inject
 
 class AccountViewModel @Inject constructor(
+    private val application: Application,
     private val registerInvalidUseCase: RegisterInvalidUseCase,
     private val registerVolunteerUseCase: RegisterVolunteerUseCase,
     private val loginInvalidUseCase: LoginInvalidUseCase,
@@ -23,6 +23,11 @@ class AccountViewModel @Inject constructor(
     private val getVolunteerItemUseCase: GetVolunteerItemUseCase,
     private val getInvalidItemUseCase: GetInvalidItemUseCase,
     private val accountItemMapper: AccountItemMapper,
+    private val deleteAccountUseCase: DeleteAccountUseCase,
+    private val isUserLoggedInUseCase: IsUserLoggedInUseCase,
+    private val isUserVerifiedUseCase: IsUserVerifiedUseCase,
+    private val logoutUseCase: LogoutUseCase,
+    private val sendEmailVerificationUseCase: SendEmailVerificationUseCase
 ) : ViewModel() {
 
     private val _errorInputEmail = MutableLiveData<Boolean>()
@@ -71,6 +76,32 @@ class AccountViewModel @Inject constructor(
             return accountItem
         }
         return null
+    }
+
+    fun logout(){
+        logoutUseCase()
+    }
+
+    fun deleteAccount(): Boolean {
+        if (isUserVerifiedUseCase()) {
+            if (getInvalidItemUseCase()?.uuid?.let { uuid ->
+                    deleteAccountUseCase(
+                        uuid,
+                        null
+                    )
+                } == true) return true
+            else if (getVolunteerItemUseCase()?.uuid?.let { uuid ->
+                    deleteAccountUseCase(
+                        uuid, null
+                    )
+                } == true) return true
+        } else {
+            Toast.makeText(application, "Подтвердите почту", Toast.LENGTH_SHORT)
+                .show()
+            sendEmailVerificationUseCase()
+            return false
+        }
+        return false
     }
 
     fun registerAccount(accountItem: AccountItem) {
