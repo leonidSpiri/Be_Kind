@@ -5,18 +5,24 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import ru.spiridonov.be.kind.data.mapper.AccountItemMapper
 import ru.spiridonov.be.kind.domain.entity.AccountItem
 import ru.spiridonov.be.kind.domain.usecases.account_item.LoginInvalidUseCase
 import ru.spiridonov.be.kind.domain.usecases.account_item.LoginVolunteerUseCase
 import ru.spiridonov.be.kind.domain.usecases.account_item.RegisterInvalidUseCase
 import ru.spiridonov.be.kind.domain.usecases.account_item.RegisterVolunteerUseCase
+import ru.spiridonov.be.kind.domain.usecases.invalid_item.GetInvalidItemUseCase
+import ru.spiridonov.be.kind.domain.usecases.volunteer_item.GetVolunteerItemUseCase
 import javax.inject.Inject
 
 class AccountViewModel @Inject constructor(
     private val registerInvalidUseCase: RegisterInvalidUseCase,
     private val registerVolunteerUseCase: RegisterVolunteerUseCase,
     private val loginInvalidUseCase: LoginInvalidUseCase,
-    private val loginVolunteerUseCase: LoginVolunteerUseCase
+    private val loginVolunteerUseCase: LoginVolunteerUseCase,
+    private val getVolunteerItemUseCase: GetVolunteerItemUseCase,
+    private val getInvalidItemUseCase: GetInvalidItemUseCase,
+    private val accountItemMapper: AccountItemMapper,
 ) : ViewModel() {
 
     private val _errorInputEmail = MutableLiveData<Boolean>()
@@ -49,6 +55,23 @@ class AccountViewModel @Inject constructor(
     private val _shouldCloseLoginScreen = MutableLiveData<String>()
     val shouldCloseLoginScreen: LiveData<String>
         get() = _shouldCloseLoginScreen
+
+    fun getUserInfo(): AccountItem? {
+        val volunteerItem = getVolunteerItemUseCase()
+        val invalidItem = getInvalidItemUseCase()
+        if (volunteerItem != null) {
+            var accountItem = accountItemMapper.mapVolunteerItemToAccountItem(volunteerItem)
+            accountItem =
+                accountItem.copy(surName = "${accountItem.surName} ${accountItem.name} ${accountItem.lastname}")
+            return accountItem
+        } else if (invalidItem != null) {
+            var accountItem = accountItemMapper.mapInvalidItemToAccountItem(invalidItem)
+            accountItem =
+                accountItem.copy(surName = "${accountItem.surName} ${accountItem.name} ${accountItem.lastname}")
+            return accountItem
+        }
+        return null
+    }
 
     fun registerAccount(accountItem: AccountItem) {
         if (validateInput(accountItem)) {

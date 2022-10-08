@@ -35,4 +35,33 @@ class AccountItemMapper @Inject constructor() {
             helpReason = accountItem.helpReason!!,
         )
     }
+
+    fun mapInvalidItemToAccountItem(invalidItem: InvalidItem) = AccountItem(
+        type = "invalid",
+        surName = invalidItem.surName,
+        password = "",
+        name = invalidItem.name,
+        lastname = invalidItem.lastname,
+        personalPhone = invalidItem.personalPhone,
+        relativePhone = invalidItem.relativePhone,
+        email = invalidItem.email,
+        birthday = invalidItem.birthday,
+        city = invalidItem.city,
+        helpReason = invalidItem.helpReason,
+    )
+
+
+    fun mapVolunteerItemToAccountItem(volunteerItem: VolunteerItem) = AccountItem(
+        type = "volunteer",
+        surName = volunteerItem.surName,
+        password = "",
+        name = volunteerItem.name,
+        lastname = volunteerItem.lastname,
+        personalPhone = volunteerItem.personalPhone,
+        relativePhone = "",
+        email = volunteerItem.email,
+        birthday = volunteerItem.birthday,
+        city = volunteerItem.city,
+        helpReason = volunteerItem.helpReason,
+    )
 }

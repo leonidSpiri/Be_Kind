@@ -6,6 +6,7 @@ import dagger.Component
 import ru.spiridonov.be.kind.BeKindApp
 import ru.spiridonov.be.kind.presentation.MainActivity
 import ru.spiridonov.be.kind.presentation.account.AccountActivity
+import ru.spiridonov.be.kind.presentation.account.UserProfileActivity
 import ru.spiridonov.be.kind.presentation.account.ui.LoginFragment
 import ru.spiridonov.be.kind.presentation.account.ui.RegisterFragment
 import ru.spiridonov.be.kind.presentation.account.ui.VerifiedUserFragment
@@ -21,6 +22,7 @@ import ru.spiridonov.be.kind.presentation.account.ui.VerifiedUserFragment
 interface ApplicationComponent {
     fun inject(activity: MainActivity)
     fun inject(activity: AccountActivity)
+    fun inject(activity: UserProfileActivity)
     fun inject(fragment: RegisterFragment)
     fun inject(fragment: VerifiedUserFragment)
     fun inject(fragment: LoginFragment)
