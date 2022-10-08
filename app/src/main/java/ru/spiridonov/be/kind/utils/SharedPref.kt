@@ -58,7 +58,17 @@ class SharedPref @Inject constructor() {
                 "be_kind_account_invalid",
                 Context.MODE_PRIVATE
             )
-                .getBoolean("isAccountConfirmed", false)
+                .getBoolean("isAccountConfirmed", false),
+            isPassportConfirmed = context.getSharedPreferences(
+                "be_kind_account_invalid",
+                Context.MODE_PRIVATE
+            )
+                .getBoolean("isPassportConfirmed", false),
+            isCertOfDisabilityConfirmed = context.getSharedPreferences(
+                "be_kind_account_invalid",
+                Context.MODE_PRIVATE
+            )
+                .getBoolean("isCertOfDisabilityConfirmed", false),
         )
 
     fun setInvalidAccountInfo(invalidItem: InvalidItem) =
@@ -72,7 +82,7 @@ class SharedPref @Inject constructor() {
                 setUnnamedSharedPref("be_kind_account_invalid", "relativePhone", it)
             }
             setUnnamedSharedPref("be_kind_account_invalid", "email", email)
-            setUnnamedSharedPref("be_kind_account_invalid", "birthday", birthday)
+            setUnnamedSharedPref("be_kind_account_invalid", "birthday", birthday ?: "")
             setUnnamedSharedPref("be_kind_account_invalid", "city", city)
             address?.let { setUnnamedSharedPref("be_kind_account_invalid", "address", it) }
             photoUrl?.let { setUnnamedSharedPref("be_kind_account_invalid", "photoUrl", it) }
@@ -87,6 +97,10 @@ class SharedPref @Inject constructor() {
             }
             context.getSharedPreferences("be_kind_account_invalid", Context.MODE_PRIVATE).edit()
                 .putBoolean("isAccountConfirmed", isAccountConfirmed).apply()
+            context.getSharedPreferences("be_kind_account_invalid", Context.MODE_PRIVATE).edit()
+                .putBoolean("isPassportConfirmed", isPassportConfirmed).apply()
+            context.getSharedPreferences("be_kind_account_invalid", Context.MODE_PRIVATE).edit()
+                .putBoolean("isCertOfDisabilityConfirmed", isCertOfDisabilityConfirmed).apply()
         }
 
     fun getVolunteerAccountInfo() =
@@ -118,7 +132,17 @@ class SharedPref @Inject constructor() {
                 "be_kind_account_volunteer",
                 Context.MODE_PRIVATE
             )
-                .getBoolean("isAccountConfirmed", false)
+                .getBoolean("isAccountConfirmed", false),
+            isPassportConfirmed = context.getSharedPreferences(
+                "be_kind_account_volunteer",
+                Context.MODE_PRIVATE
+            )
+                .getBoolean("isPassportConfirmed", false),
+            isCertOfMedicalEduConfirmed = context.getSharedPreferences(
+                "be_kind_account_volunteer",
+                Context.MODE_PRIVATE
+            )
+                .getBoolean("isCertOfMedicalEduConfirmed", false),
         )
 
     fun setVolunteerAccountInfo(volunteerItem: VolunteerItem) =
@@ -129,7 +153,7 @@ class SharedPref @Inject constructor() {
             setUnnamedSharedPref("be_kind_account_volunteer", "lastname", lastname)
             setUnnamedSharedPref("be_kind_account_volunteer", "personalPhone", personalPhone)
             setUnnamedSharedPref("be_kind_account_volunteer", "email", email)
-            setUnnamedSharedPref("be_kind_account_volunteer", "birthday", birthday)
+            setUnnamedSharedPref("be_kind_account_volunteer", "birthday", birthday ?: "")
             setUnnamedSharedPref("be_kind_account_volunteer", "city", city)
             photoUrl?.let { setUnnamedSharedPref("be_kind_account_volunteer", "photoUrl", it) }
             passportGeneralUrl?.let {
@@ -143,6 +167,10 @@ class SharedPref @Inject constructor() {
             }
             context.getSharedPreferences("be_kind_account_volunteer", Context.MODE_PRIVATE).edit()
                 .putBoolean("isAccountConfirmed", isAccountConfirmed).apply()
+            context.getSharedPreferences("be_kind_account_volunteer", Context.MODE_PRIVATE).edit()
+                .putBoolean("isPassportConfirmed", isPassportConfirmed).apply()
+            context.getSharedPreferences("be_kind_account_volunteer", Context.MODE_PRIVATE).edit()
+                .putBoolean("isCertOfMedicalEduConfirmed", isCertOfMedicalEduConfirmed).apply()
         }
 
     fun deleteInvalidAccountInfo() =

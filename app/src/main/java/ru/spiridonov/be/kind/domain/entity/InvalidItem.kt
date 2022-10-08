@@ -8,7 +8,7 @@ data class InvalidItem(
     var personalPhone: String,
     var relativePhone: String? = null,
     var email: String,
-    val birthday: String,
+    val birthday:  String? = null,
     var city: String,
     var address: String? = null,
     var helpReason: List<String>,
@@ -17,7 +17,11 @@ data class InvalidItem(
     var passportRegistrationUrl: String? = null,
     var certOfDisabilityUrl: String? = null,
     @field:JvmField
-    var isAccountConfirmed: Boolean = false
+    var isAccountConfirmed: Boolean = false,
+    @field:JvmField
+    var isPassportConfirmed: Boolean = false,
+    @field:JvmField
+    var isCertOfDisabilityConfirmed: Boolean = false,
 ) {
     constructor() : this(
         uuid = "",
@@ -27,7 +31,7 @@ data class InvalidItem(
         personalPhone = "",
         relativePhone = null,
         email = "",
-        birthday = "",
+        birthday = null,
         city = "",
         address = null,
         helpReason = listOf(),
@@ -35,6 +39,8 @@ data class InvalidItem(
         passportGeneralUrl = null,
         passportRegistrationUrl = null,
         certOfDisabilityUrl = null,
-        isAccountConfirmed = false
+        isAccountConfirmed = false,
+        isPassportConfirmed = false,
+        isCertOfDisabilityConfirmed = false
     )
 }

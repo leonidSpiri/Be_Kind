@@ -19,7 +19,7 @@ class AccountItemMapper @Inject constructor() {
             birthday = accountItem.birthday.toString(),
             city = accountItem.city.toString(),
             helpReason = accountItem.helpReason!!,
-            )
+        )
     }
 
     fun mapAccountItemToVolunteerItem(uuid: String, accountItem: AccountItem): VolunteerItem {

@@ -149,7 +149,7 @@ class AccountViewModel @Inject constructor(
                 _errorInputPersonalNumber.value = true
                 result = false
             }
-            if (birthday == null || birthday.isBlank()) {
+            if (birthday == null) {
                 _errorInputBirthday.value = true
                 result = false
             }

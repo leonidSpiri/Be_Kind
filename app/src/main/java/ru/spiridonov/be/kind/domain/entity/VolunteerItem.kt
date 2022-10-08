@@ -7,7 +7,7 @@ data class VolunteerItem(
     val lastname: String,
     var personalPhone: String,
     var email: String,
-    val birthday: String,
+    val birthday:  String? = null,
     var city: String,
     var helpReason: List<String>,
     var photoUrl: String? = null,
@@ -15,7 +15,11 @@ data class VolunteerItem(
     var passportRegistrationUrl: String? = null,
     var certOfMedicalEduUrl: String? = null,
     @field:JvmField
-    var isAccountConfirmed: Boolean = false
+    var isAccountConfirmed: Boolean = false,
+    @field:JvmField
+    var isPassportConfirmed: Boolean = false,
+    @field:JvmField
+    var isCertOfMedicalEduConfirmed: Boolean = false,
 ) {
     constructor() : this(
         uuid = "",
@@ -24,13 +28,15 @@ data class VolunteerItem(
         lastname = "",
         personalPhone = "",
         email = "",
-        birthday = "",
+        birthday = null,
         city = "",
         helpReason = listOf(),
         photoUrl = null,
         passportGeneralUrl = null,
         passportRegistrationUrl = null,
         certOfMedicalEduUrl = null,
-        isAccountConfirmed = false
+        isAccountConfirmed = false,
+        isPassportConfirmed = false,
+        isCertOfMedicalEduConfirmed = false
     )
 }
