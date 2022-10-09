@@ -48,6 +48,9 @@ class AccountItemMapper @Inject constructor() {
         birthday = invalidItem.birthday,
         city = invalidItem.city,
         helpReason = invalidItem.helpReason,
+        isAccountConfirmed = invalidItem.isAccountConfirmed,
+        isPassportConfirmed = invalidItem.isPassportConfirmed,
+        isCertConfirmed = invalidItem.isCertOfDisabilityConfirmed,
     )
 
 
@@ -63,5 +66,8 @@ class AccountItemMapper @Inject constructor() {
         birthday = volunteerItem.birthday,
         city = volunteerItem.city,
         helpReason = volunteerItem.helpReason,
+        isAccountConfirmed = volunteerItem.isAccountConfirmed,
+        isPassportConfirmed = volunteerItem.isPassportConfirmed,
+        isCertConfirmed = volunteerItem.isCertOfMedicalEduConfirmed,
     )
 }

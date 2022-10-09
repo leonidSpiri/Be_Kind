@@ -11,4 +11,6 @@
     <color name="orange">#FFC107</color>
     <color name="orange_light">#FCE086</color>
     <color name="orange_dark">#B16302</color>
+    <color name="good">#8BC34A</color>
+    <color name="bad">#F44336</color>
 </resources>

@@ -20,4 +20,14 @@
     <string name="registered_user_since">registered_user_since</string>
     <string name="logout">Выйти</string>
     <string name="delete">Удалить профиль</string>
+    <string name="passport_confirmed">Паспорт подтвержден</string>
+    <string name="passport_not_confirmed">Паспорт не подтвержден</string>
+    <string name="email_confirmed">Почта подтверждена</string>
+    <string name="email_not_confirmed">Почта не подтверждена</string>
+    <string name="certl_confirmed">Сертификат подтвержден</string>
+    <string name="cert_not_confirmed">Сертификат не подтвержден</string>
+    <string name="confirm">Подтвердить / Изменить документы</string>
+    <string name="complete_work">Загрузить фотографии</string>
+    <string name="make_photo">Сделать фото</string>
+    <string name="get_from_gallery">Загрузить из галереи</string>
 </resources>

@@ -220,6 +220,109 @@
                             android:hint="@{accountItem.personalPhone}" />
                     </RelativeLayout>
 
+                    <View
+                        android:id="@+id/divider_mobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/RL_mobile"
+                        android:background="@android:color/darker_gray" />
+
+                    <RelativeLayout
+                        android:id="@+id/RL_email_confirmed"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/divider_mobile"
+                        android:layout_marginTop="10dp">
+
+                        <ImageView
+                            android:id="@+id/ic_email_confirmed"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/ic_check"
+                            android:contentDescription="@string/mobile" />
+
+                        <TextView
+                            android:id="@+id/textView_email_confirmed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignStart="@id/ic_email_confirmed"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="50dp"
+                            android:layout_marginTop="20dp"
+                            app:emailConfirmed="@{accountItem.accountConfirmed}" />
+                    </RelativeLayout>
+
+                    <View
+                        android:id="@+id/divider_email_confirmed"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/RL_email_confirmed"
+                        android:background="@android:color/darker_gray" />
+
+                    <RelativeLayout
+                        android:id="@+id/RL_passport_confirmed"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/divider_email_confirmed"
+                        android:layout_marginTop="10dp">
+
+                        <ImageView
+                            android:id="@+id/ic_passport_confirmed"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/ic_check"
+                            android:contentDescription="@string/mobile" />
+
+                        <TextView
+                            android:id="@+id/textView_passport_confirmed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignStart="@id/ic_passport_confirmed"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="50dp"
+                            android:layout_marginTop="20dp"
+                            app:passportConfirmed="@{accountItem.passportConfirmed}" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:id="@+id/divider_cert_confirmed"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/RL_passport_confirmed"
+                        android:background="@android:color/darker_gray" />
+
+                    <RelativeLayout
+                        android:id="@+id/RL_cert_confirmed"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/divider_cert_confirmed"
+                        android:layout_marginTop="10dp">
+
+                        <ImageView
+                            android:id="@+id/ic_cert_confirmed"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/ic_check"
+                            android:contentDescription="@string/mobile" />
+
+                        <TextView
+                            android:id="@+id/textView_cert_confirmed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignStart="@id/ic_cert_confirmed"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="50dp"
+                            android:layout_marginTop="20dp"
+                            app:certConfirmed="@{accountItem.certConfirmed}" />
+                    </RelativeLayout>
+
                     <ProgressBar
                         android:id="@+id/progress_bar"
                         style="?android:attr/progressBarStyleLarge"
@@ -232,38 +335,55 @@
                 </RelativeLayout>
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_logout"
+                    android:id="@+id/btn_confirm"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/logout"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginBottom="15dp"
                     android:padding="15dp"
+                    android:text="@string/confirm"
                     android:textAlignment="center"
                     android:textColor="@color/orange"
-                    android:textSize="20sp"
+                    android:textSize="14sp"
                     android:theme="@style/Platform.MaterialComponents"
                     app:cornerRadius="5dp"
-                    app:strokeColor="@color/white"/>
+                    app:strokeColor="@color/white" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_logout"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:padding="15dp"
+                    android:text="@string/logout"
+                    android:textAlignment="center"
+                    android:textColor="@color/orange"
+                    android:textSize="14sp"
+                    android:theme="@style/Platform.MaterialComponents"
+                    app:cornerRadius="5dp"
+                    app:strokeColor="@color/white" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_delete"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/delete"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginBottom="15dp"
                     android:padding="15dp"
+                    android:text="@string/delete"
                     android:textAlignment="center"
                     android:textColor="@color/orange"
-                    android:textSize="20sp"
+                    android:textSize="14sp"
                     android:theme="@style/Platform.MaterialComponents"
                     app:cornerRadius="5dp"
-                    app:strokeColor="@color/white"/>
+                    app:strokeColor="@color/white" />
 
                 <TextView
                     android:layout_width="match_parent"

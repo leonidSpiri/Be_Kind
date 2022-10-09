@@ -14,7 +14,7 @@ class UserProfileActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityUserProfileBinding.inflate(layoutInflater)
     }
-
+    private var registerType = ""
     private val component by lazy {
         (application as BeKindApp).component
     }
@@ -35,6 +35,7 @@ class UserProfileActivity : AppCompatActivity() {
     private fun observeViewModel() {
         viewModel.getUserInfo()?.let {
             binding.accountItem = it
+            registerType = it.type
         }
     }
 
@@ -46,6 +47,9 @@ class UserProfileActivity : AppCompatActivity() {
             }
             btnDelete.setOnClickListener {
                 if (viewModel.deleteAccount()) finish()
+            }
+            btnConfirm.setOnClickListener {
+                //перевести фрагмент на активити
             }
         }
     }
