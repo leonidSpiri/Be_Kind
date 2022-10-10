@@ -42,18 +42,6 @@ class SharedPref @Inject constructor() {
             address = getUnnamedSharedPref("be_kind_account_invalid", "address"),
             helpReason = listOf(),
             photoUrl = getUnnamedSharedPref("be_kind_account_invalid", "photoUrl"),
-            passportGeneralUrl = getUnnamedSharedPref(
-                "be_kind_account_invalid",
-                "passportGeneralUrl"
-            ),
-            passportRegistrationUrl = getUnnamedSharedPref(
-                "be_kind_account_invalid",
-                "passportRegistrationUrl"
-            ),
-            certOfDisabilityUrl = getUnnamedSharedPref(
-                "be_kind_account_invalid",
-                "certOfDisabilityUrl"
-            ),
             isAccountConfirmed = context.getSharedPreferences(
                 "be_kind_account_invalid",
                 Context.MODE_PRIVATE
@@ -86,15 +74,6 @@ class SharedPref @Inject constructor() {
             setUnnamedSharedPref("be_kind_account_invalid", "city", city)
             address?.let { setUnnamedSharedPref("be_kind_account_invalid", "address", it) }
             photoUrl?.let { setUnnamedSharedPref("be_kind_account_invalid", "photoUrl", it) }
-            passportGeneralUrl?.let {
-                setUnnamedSharedPref("be_kind_account_invalid", "passportGeneralUrl", it)
-            }
-            passportRegistrationUrl?.let {
-                setUnnamedSharedPref("be_kind_account_invalid", "passportRegistrationUrl", it)
-            }
-            certOfDisabilityUrl?.let {
-                setUnnamedSharedPref("be_kind_account_invalid", "certOfDisabilityUrl", it)
-            }
             context.getSharedPreferences("be_kind_account_invalid", Context.MODE_PRIVATE).edit()
                 .putBoolean("isAccountConfirmed", isAccountConfirmed).apply()
             context.getSharedPreferences("be_kind_account_invalid", Context.MODE_PRIVATE).edit()
@@ -116,18 +95,6 @@ class SharedPref @Inject constructor() {
             city = getUnnamedSharedPref("be_kind_account_volunteer", "city") ?: "",
             helpReason = listOf(),
             photoUrl = getUnnamedSharedPref("be_kind_account_volunteer", "photoUrl"),
-            passportGeneralUrl = getUnnamedSharedPref(
-                "be_kind_account_volunteer",
-                "passportGeneralUrl"
-            ),
-            passportRegistrationUrl = getUnnamedSharedPref(
-                "be_kind_account_volunteer",
-                "passportRegistrationUrl"
-            ),
-            certOfMedicalEduUrl = getUnnamedSharedPref(
-                "be_kind_account_volunteer",
-                "certOfMedicalEduUrl"
-            ),
             isAccountConfirmed = context.getSharedPreferences(
                 "be_kind_account_volunteer",
                 Context.MODE_PRIVATE
@@ -156,15 +123,6 @@ class SharedPref @Inject constructor() {
             setUnnamedSharedPref("be_kind_account_volunteer", "birthday", birthday ?: "")
             setUnnamedSharedPref("be_kind_account_volunteer", "city", city)
             photoUrl?.let { setUnnamedSharedPref("be_kind_account_volunteer", "photoUrl", it) }
-            passportGeneralUrl?.let {
-                setUnnamedSharedPref("be_kind_account_volunteer", "passportGeneralUrl", it)
-            }
-            passportRegistrationUrl?.let {
-                setUnnamedSharedPref("be_kind_account_volunteer", "passportRegistrationUrl", it)
-            }
-            certOfMedicalEduUrl?.let {
-                setUnnamedSharedPref("be_kind_account_volunteer", "certOfMedicalEduUrl", it)
-            }
             context.getSharedPreferences("be_kind_account_volunteer", Context.MODE_PRIVATE).edit()
                 .putBoolean("isAccountConfirmed", isAccountConfirmed).apply()
             context.getSharedPreferences("be_kind_account_volunteer", Context.MODE_PRIVATE).edit()

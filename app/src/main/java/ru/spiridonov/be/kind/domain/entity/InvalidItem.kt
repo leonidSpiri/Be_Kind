@@ -13,9 +13,6 @@ data class InvalidItem(
     var address: String? = null,
     var helpReason: List<String>,
     var photoUrl: String? = null,
-    var passportGeneralUrl: String? = null,
-    var passportRegistrationUrl: String? = null,
-    var certOfDisabilityUrl: String? = null,
     @field:JvmField
     var isAccountConfirmed: Boolean = false,
     @field:JvmField
@@ -36,9 +33,6 @@ data class InvalidItem(
         address = null,
         helpReason = listOf(),
         photoUrl = null,
-        passportGeneralUrl = null,
-        passportRegistrationUrl = null,
-        certOfDisabilityUrl = null,
         isAccountConfirmed = false,
         isPassportConfirmed = false,
         isCertOfDisabilityConfirmed = false

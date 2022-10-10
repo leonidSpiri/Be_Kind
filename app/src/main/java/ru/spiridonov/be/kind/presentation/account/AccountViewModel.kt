@@ -1,18 +1,25 @@
 package ru.spiridonov.be.kind.presentation.account
 
 import android.app.Application
+import android.graphics.Bitmap
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.spiridonov.be.kind.data.mapper.AccountItemMapper
 import ru.spiridonov.be.kind.domain.entity.AccountItem
 import ru.spiridonov.be.kind.domain.usecases.account_item.*
 import ru.spiridonov.be.kind.domain.usecases.invalid_item.GetInvalidItemUseCase
 import ru.spiridonov.be.kind.domain.usecases.volunteer_item.GetVolunteerItemUseCase
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
+
 
 class AccountViewModel @Inject constructor(
     private val application: Application,
@@ -24,7 +31,6 @@ class AccountViewModel @Inject constructor(
     private val getInvalidItemUseCase: GetInvalidItemUseCase,
     private val accountItemMapper: AccountItemMapper,
     private val deleteAccountUseCase: DeleteAccountUseCase,
-    private val isUserLoggedInUseCase: IsUserLoggedInUseCase,
     private val isUserVerifiedUseCase: IsUserVerifiedUseCase,
     private val logoutUseCase: LogoutUseCase,
     private val sendEmailVerificationUseCase: SendEmailVerificationUseCase
@@ -61,6 +67,28 @@ class AccountViewModel @Inject constructor(
     val shouldCloseLoginScreen: LiveData<String>
         get() = _shouldCloseLoginScreen
 
+    private var uuid = ""
+
+
+    fun uploadPhoto(bitmapPhoto: Bitmap, type: String) =
+        viewModelScope.launch {
+            CoroutineScope(Dispatchers.Default).launch {
+                val storage = FirebaseStorage.getInstance().reference
+                val account = getUserInfo()
+                val photoRef = storage.child("images/users/${account?.type}/${uuid}/$type-${getDateHour()}.jpg")
+                val baos = java.io.ByteArrayOutputStream()
+                bitmapPhoto.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                val data = baos.toByteArray()
+                val uploadTask = photoRef.putBytes(data)
+                uploadTask.addOnFailureListener {
+                    Toast.makeText(application, "Ошибка загрузки фото", Toast.LENGTH_SHORT).show()
+                }.addOnSuccessListener {
+                    Toast.makeText(application, "Фото загружено", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+
     fun getUserInfo(): AccountItem? {
         val volunteerItem = getVolunteerItemUseCase()
         val invalidItem = getInvalidItemUseCase()
@@ -68,17 +96,19 @@ class AccountViewModel @Inject constructor(
             var accountItem = accountItemMapper.mapVolunteerItemToAccountItem(volunteerItem)
             accountItem =
                 accountItem.copy(surName = "${accountItem.surName} ${accountItem.name} ${accountItem.lastname}")
+            uuid = volunteerItem.uuid
             return accountItem
         } else if (invalidItem != null) {
             var accountItem = accountItemMapper.mapInvalidItemToAccountItem(invalidItem)
             accountItem =
                 accountItem.copy(surName = "${accountItem.surName} ${accountItem.name} ${accountItem.lastname}")
+            uuid = invalidItem.uuid
             return accountItem
         }
         return null
     }
 
-    fun logout(){
+    fun logout() {
         logoutUseCase()
     }
 
@@ -213,6 +243,12 @@ class AccountViewModel @Inject constructor(
             }
         }
         return result
+    }
+
+    private fun getDateHour(): String {
+        val date = Date()
+        val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault())
+        return formatter.format(date)
     }
 
     private fun parseStroke(input: String?) = input?.trim() ?: ""

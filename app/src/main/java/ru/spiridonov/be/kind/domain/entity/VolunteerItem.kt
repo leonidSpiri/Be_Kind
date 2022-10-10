@@ -11,9 +11,6 @@ data class VolunteerItem(
     var city: String,
     var helpReason: List<String>,
     var photoUrl: String? = null,
-    var passportGeneralUrl: String? = null,
-    var passportRegistrationUrl: String? = null,
-    var certOfMedicalEduUrl: String? = null,
     @field:JvmField
     var isAccountConfirmed: Boolean = false,
     @field:JvmField
@@ -32,9 +29,6 @@ data class VolunteerItem(
         city = "",
         helpReason = listOf(),
         photoUrl = null,
-        passportGeneralUrl = null,
-        passportRegistrationUrl = null,
-        certOfMedicalEduUrl = null,
         isAccountConfirmed = false,
         isPassportConfirmed = false,
         isCertOfMedicalEduConfirmed = false

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import ru.spiridonov.be.kind.BeKindApp
 import ru.spiridonov.be.kind.databinding.ActivityUserProfileBinding
+import ru.spiridonov.be.kind.presentation.account.ui.VerifiedUserActivity
 import ru.spiridonov.be.kind.presentation.viewmodels.ViewModelFactory
 import javax.inject.Inject
 
@@ -49,7 +50,7 @@ class UserProfileActivity : AppCompatActivity() {
                 if (viewModel.deleteAccount()) finish()
             }
             btnConfirm.setOnClickListener {
-                //перевести фрагмент на активити
+                startActivity(VerifiedUserActivity.newIntent(this@UserProfileActivity))
             }
         }
     }

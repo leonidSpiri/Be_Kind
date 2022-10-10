@@ -233,8 +233,13 @@ class AccountRepositoryImpl @Inject constructor(
     }
 
     override fun isUserVerified(): Boolean {
-        val user = auth.currentUser
-        return user?.isEmailVerified ?: false
+        return try {
+            val currentUser = auth.currentUser
+            currentUser != null && currentUser.isEmailVerified
+        } catch (e: Exception) {
+            Log.d("AccountRepositoryImpl", "isUserVerified: ${e.message}")
+            false
+        }
     }
 
     override fun sendEmailVerification() {
