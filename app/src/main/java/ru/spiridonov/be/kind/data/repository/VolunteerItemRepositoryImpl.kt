@@ -1,10 +1,13 @@
 package ru.spiridonov.be.kind.data.repository
 
+import android.util.Log
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import ru.spiridonov.be.kind.domain.entity.InvalidItem
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import ru.spiridonov.be.kind.domain.entity.VolunteerItem
 import ru.spiridonov.be.kind.domain.repository.VolunteerItemRepository
 import ru.spiridonov.be.kind.domain.usecases.account_item.IsUserVerifiedUseCase
@@ -24,37 +27,47 @@ class VolunteerItemRepositoryImpl @Inject constructor(
         Firebase.firestore
     }
 
-    override suspend fun editVolunteerItem(VolunteerItem: VolunteerItem) {
-        sharedPref.setVolunteerAccountInfo(VolunteerItem)
+    override suspend fun editVolunteerItem(
+        volunteerItem: VolunteerItem,
+        callback: (VolunteerItem?) -> Unit
+    ) {
+        sharedPref.setVolunteerAccountInfo(volunteerItem)
+        db.collection("users").document("UsersCollection")
+            .collection("volunteers")
+            .document(volunteerItem.uuid).set(volunteerItem)
+            .addOnCompleteListener {
+                callback.invoke(volunteerItem)
+            }
     }
 
-    override fun getVolunteerItem(): VolunteerItem? {
-        updateInfo{
-        }
-        val item = sharedPref.getVolunteerAccountInfo()
-        if (item.uuid.isEmpty()) return null
-        return item
-    }
-
-    private fun updateInfo(callback: (Boolean) -> Unit) {
+    override fun getVolunteerItem(callback: (VolunteerItem?) -> Unit) {
         db.collection("users").document("UsersCollection").collection("volunteers")
             .document(auth.currentUser!!.uid).get()
             .addOnSuccessListener { document ->
                 if (document != null) {
                     val volunteerItem = document.toObject<VolunteerItem>()
                     volunteerItem?.let {
-                        if (isUserVerifiedUseCase())
+                        callback.invoke(it)
+                        if (isUserVerifiedUseCase()) {
                             sharedPref.setVolunteerAccountInfo(it.copy(isAccountConfirmed = true))
+                            if (!volunteerItem.isAccountConfirmed){
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    editVolunteerItem(volunteerItem.copy(isAccountConfirmed = true)) {}
+                                }
+                            }
+                        }
                         else
                             sharedPref.setVolunteerAccountInfo(it.copy(isAccountConfirmed = false))
-                        callback.invoke(true)
+                        val item = sharedPref.getVolunteerAccountInfo()
+                        if (item.uuid.isEmpty()) callback(null)
+                        else callback.invoke(item)
                     }
-                } else {
-                    callback.invoke(false)
-                }
+                } else callback.invoke(null)
             }
             .addOnFailureListener {
-                callback.invoke(false)
+                val item = sharedPref.getVolunteerAccountInfo()
+                if (item.uuid.isEmpty()) callback(null)
+                callback.invoke(item)
             }
     }
 }

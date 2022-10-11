@@ -4,6 +4,9 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import ru.spiridonov.be.kind.domain.entity.InvalidItem
 import ru.spiridonov.be.kind.domain.repository.InvalidItemRepository
 import ru.spiridonov.be.kind.domain.usecases.account_item.IsUserVerifiedUseCase
@@ -21,38 +24,46 @@ class InvalidItemRepositoryImpl @Inject constructor(
         Firebase.firestore
     }
 
-    override suspend fun editInvalidItem(invalidItem: InvalidItem) {
+    override suspend fun editInvalidItem(
+        invalidItem: InvalidItem,
+        callback: (InvalidItem?) -> Unit
+    ) {
         sharedPref.setInvalidAccountInfo(invalidItem)
+        db.collection("users").document("UsersCollection")
+            .collection("invalids")
+            .document(invalidItem.uuid).set(invalidItem)
+            .addOnCompleteListener {
+                callback.invoke(invalidItem)
+            }
     }
 
-    override fun getInvalidItem(): InvalidItem? {
-       updateInfo{
-       }
-
-        val item = sharedPref.getInvalidAccountInfo()
-        if (item.uuid.isEmpty()) return null
-        return item
-    }
-
-    private fun updateInfo( callback: (Boolean) -> Unit){
+    override fun getInvalidItem(callback: (InvalidItem?) -> Unit) {
         db.collection("users").document("UsersCollection").collection("invalids")
             .document(auth.currentUser!!.uid).get()
             .addOnSuccessListener { document ->
                 if (document != null) {
                     val invalidItem = document.toObject<InvalidItem>()
                     invalidItem?.let {
-                        if (isUserVerifiedUseCase())
+                        if (isUserVerifiedUseCase()) {
                             sharedPref.setInvalidAccountInfo(it.copy(isAccountConfirmed = true))
-                        else
+                            if (!invalidItem.isAccountConfirmed) {
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    editInvalidItem(invalidItem.copy(isAccountConfirmed = true)) {}
+                                }
+                            }
+                        } else
                             sharedPref.setInvalidAccountInfo(it.copy(isAccountConfirmed = false))
-                        callback.invoke(true)
+
+                        val item = sharedPref.getInvalidAccountInfo()
+                        if (item.uuid.isEmpty()) callback(null)
+                        callback.invoke(item)
                     }
-                } else {
-                    callback.invoke(false)
                 }
             }
             .addOnFailureListener {
-                callback.invoke(false)
+                val item = sharedPref.getInvalidAccountInfo()
+                if (item.uuid.isEmpty()) callback(null)
+                callback.invoke(item)
             }
     }
 }

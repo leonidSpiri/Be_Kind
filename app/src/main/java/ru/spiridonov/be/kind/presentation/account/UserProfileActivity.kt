@@ -3,6 +3,8 @@ package ru.spiridonov.be.kind.presentation.account
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import ru.spiridonov.be.kind.BeKindApp
@@ -31,12 +33,16 @@ class UserProfileActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, viewModelFactory)[AccountViewModel::class.java]
         observeViewModel()
         buttonClickListener()
+        binding.progressBar.visibility = View.VISIBLE
     }
 
     private fun observeViewModel() {
-        viewModel.getUserInfo()?.let {
-            binding.accountItem = it
-            registerType = it.type
+        viewModel.getUserInfo { accountItem ->
+            accountItem?.let {
+                binding.accountItem = it
+                registerType = it.type
+                binding.progressBar.visibility = View.GONE
+            }
         }
     }
 

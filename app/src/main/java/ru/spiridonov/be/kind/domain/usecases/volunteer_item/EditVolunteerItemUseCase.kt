@@ -7,6 +7,6 @@ import javax.inject.Inject
 class EditVolunteerItemUseCase @Inject constructor(
     private val repository: VolunteerItemRepository
 ) {
-    suspend operator fun invoke(volunteerItem: VolunteerItem) =
-        repository.editVolunteerItem(volunteerItem)
+    suspend operator fun invoke(volunteerItem: VolunteerItem, callback: (VolunteerItem?) -> Unit) =
+        repository.editVolunteerItem(volunteerItem, callback)
 }

@@ -14,7 +14,9 @@ import kotlinx.coroutines.launch
 import ru.spiridonov.be.kind.data.mapper.AccountItemMapper
 import ru.spiridonov.be.kind.domain.entity.AccountItem
 import ru.spiridonov.be.kind.domain.usecases.account_item.*
+import ru.spiridonov.be.kind.domain.usecases.invalid_item.EditInvalidItemUseCase
 import ru.spiridonov.be.kind.domain.usecases.invalid_item.GetInvalidItemUseCase
+import ru.spiridonov.be.kind.domain.usecases.volunteer_item.EditVolunteerItemUseCase
 import ru.spiridonov.be.kind.domain.usecases.volunteer_item.GetVolunteerItemUseCase
 import java.text.SimpleDateFormat
 import java.util.*
@@ -29,9 +31,10 @@ class AccountViewModel @Inject constructor(
     private val loginVolunteerUseCase: LoginVolunteerUseCase,
     private val getVolunteerItemUseCase: GetVolunteerItemUseCase,
     private val getInvalidItemUseCase: GetInvalidItemUseCase,
+    private val editInvalidItemUseCase: EditInvalidItemUseCase,
+    private val editVolunteerItemUseCase: EditVolunteerItemUseCase,
     private val accountItemMapper: AccountItemMapper,
     private val deleteAccountUseCase: DeleteAccountUseCase,
-    private val isUserVerifiedUseCase: IsUserVerifiedUseCase,
     private val logoutUseCase: LogoutUseCase,
     private val sendEmailVerificationUseCase: SendEmailVerificationUseCase
 ) : ViewModel() {
@@ -74,38 +77,90 @@ class AccountViewModel @Inject constructor(
         viewModelScope.launch {
             CoroutineScope(Dispatchers.Default).launch {
                 val storage = FirebaseStorage.getInstance().reference
-                val account = getUserInfo()
-                val photoRef = storage.child("images/users/${account?.type}/${uuid}/$type-${getDateHour()}.jpg")
-                val baos = java.io.ByteArrayOutputStream()
-                bitmapPhoto.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                val data = baos.toByteArray()
-                val uploadTask = photoRef.putBytes(data)
-                uploadTask.addOnFailureListener {
-                    Toast.makeText(application, "Ошибка загрузки фото", Toast.LENGTH_SHORT).show()
-                }.addOnSuccessListener {
-                    Toast.makeText(application, "Фото загружено", Toast.LENGTH_SHORT).show()
+                getUserInfo { account ->
+                    val photoRef =
+                        storage.child("images/users/${account?.type}/${uuid}/$type-${getDateHour()}.jpg")
+                    val baos = java.io.ByteArrayOutputStream()
+                    bitmapPhoto.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                    val data = baos.toByteArray()
+                    val uploadTask = photoRef.putBytes(data)
+                    uploadTask.addOnFailureListener {
+                        Toast.makeText(application, "Ошибка загрузки фото", Toast.LENGTH_SHORT)
+                            .show()
+                    }.addOnSuccessListener {
+                        Toast.makeText(application, "Фото загружено", Toast.LENGTH_SHORT).show()
+                        when (type) {
+                            "FirstPassport", "SecondPassport" -> {
+                                if (account?.type == INVALID_TYPE)
+                                    getInvalidItemUseCase {
+                                        CoroutineScope(Dispatchers.Default).launch {
+                                            editInvalidItemUseCase(it!!.copy(isPassportConfirmed = false)) {
+
+                                            }
+                                        }
+                                    }
+                                else
+                                    getVolunteerItemUseCase {
+                                        CoroutineScope(Dispatchers.Default).launch {
+                                            editVolunteerItemUseCase(it!!.copy(isPassportConfirmed = false)) {
+
+                                            }
+                                        }
+                                    }
+                            }
+                            "Cert" -> {
+                                if (account?.type == INVALID_TYPE)
+                                    getInvalidItemUseCase {
+                                        CoroutineScope(Dispatchers.Default).launch {
+                                            editInvalidItemUseCase(
+                                                it!!.copy(
+                                                    isCertOfDisabilityConfirmed = false
+                                                )
+                                            ) {
+
+                                            }
+                                        }
+                                    }
+                                else
+                                    getVolunteerItemUseCase {
+                                        CoroutineScope(Dispatchers.Default).launch {
+                                            editVolunteerItemUseCase(
+                                                it!!.copy(
+                                                    isCertOfMedicalEduConfirmed = false
+                                                )
+                                            ) {
+
+                                            }
+                                        }
+                                    }
+                            }
+                        }
+                    }
                 }
             }
         }
 
 
-    fun getUserInfo(): AccountItem? {
-        val volunteerItem = getVolunteerItemUseCase()
-        val invalidItem = getInvalidItemUseCase()
-        if (volunteerItem != null) {
-            var accountItem = accountItemMapper.mapVolunteerItemToAccountItem(volunteerItem)
-            accountItem =
-                accountItem.copy(surName = "${accountItem.surName} ${accountItem.name} ${accountItem.lastname}")
-            uuid = volunteerItem.uuid
-            return accountItem
-        } else if (invalidItem != null) {
-            var accountItem = accountItemMapper.mapInvalidItemToAccountItem(invalidItem)
-            accountItem =
-                accountItem.copy(surName = "${accountItem.surName} ${accountItem.name} ${accountItem.lastname}")
-            uuid = invalidItem.uuid
-            return accountItem
+    fun getUserInfo(callback: (AccountItem?) -> Unit) {
+        getVolunteerItemUseCase.invoke { volunteerItem ->
+            if (volunteerItem != null) {
+                var accountItem = accountItemMapper.mapVolunteerItemToAccountItem(volunteerItem)
+                accountItem =
+                    accountItem.copy(surName = "${accountItem.surName} ${accountItem.name} ${accountItem.lastname}")
+                uuid = volunteerItem.uuid
+                callback(accountItem)
+            }
         }
-        return null
+        getInvalidItemUseCase.invoke { invalidItem ->
+            if (invalidItem != null) {
+                var accountItem = accountItemMapper.mapInvalidItemToAccountItem(invalidItem)
+                accountItem =
+                    accountItem.copy(surName = "${accountItem.surName} ${accountItem.name} ${accountItem.lastname}")
+                uuid = invalidItem.uuid
+                callback(accountItem)
+            }
+            callback(null)
+        }
     }
 
     fun logout() {
@@ -113,26 +168,24 @@ class AccountViewModel @Inject constructor(
     }
 
     fun deleteAccount(): Boolean {
-        if (isUserVerifiedUseCase()) {
-            if (getInvalidItemUseCase()?.uuid?.let { uuid ->
-                    deleteAccountUseCase(
-                        uuid,
-                        null
-                    )
-                } == true) return true
-            else if (getVolunteerItemUseCase()?.uuid?.let { uuid ->
-                    deleteAccountUseCase(
-                        uuid, null
-                    )
-                } == true) return true
-        } else {
-            Toast.makeText(application, "Подтвердите почту", Toast.LENGTH_SHORT)
-                .show()
-            sendEmailVerificationUseCase()
-            return false
+        getInvalidItemUseCase.invoke { invalidItem ->
+            invalidItem?.uuid?.let { uuid ->
+                deleteAccountUseCase(
+                    uuid,
+                    null
+                )
+            }
         }
-        return false
+        getVolunteerItemUseCase.invoke { volunteerItem ->
+            volunteerItem?.uuid?.let { uuid ->
+                deleteAccountUseCase(
+                    uuid, null
+                )
+            }
+        }
+        return true
     }
+
 
     fun registerAccount(accountItem: AccountItem) {
         if (validateInput(accountItem)) {
@@ -290,6 +343,7 @@ class AccountViewModel @Inject constructor(
     }
 
     companion object {
+        private const val REGISTER_TYPE = "register_type"
         private const val INVALID_TYPE = "invalid_type"
     }
 }

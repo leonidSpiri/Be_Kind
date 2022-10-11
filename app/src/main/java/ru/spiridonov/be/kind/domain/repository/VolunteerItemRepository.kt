@@ -4,7 +4,7 @@ import ru.spiridonov.be.kind.domain.entity.VolunteerItem
 
 interface VolunteerItemRepository {
 
-    suspend fun editVolunteerItem(VolunteerItem: VolunteerItem)
+    suspend fun editVolunteerItem(volunteerItem: VolunteerItem, callback: (VolunteerItem?) -> Unit)
 
-    fun getVolunteerItem(): VolunteerItem?
+    fun getVolunteerItem(callback: (VolunteerItem?) -> Unit)
 }

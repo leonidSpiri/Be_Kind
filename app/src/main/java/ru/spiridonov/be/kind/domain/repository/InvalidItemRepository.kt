@@ -4,7 +4,7 @@ import ru.spiridonov.be.kind.domain.entity.InvalidItem
 
 interface InvalidItemRepository {
 
-    suspend fun editInvalidItem(invalidItem: InvalidItem)
+    suspend fun editInvalidItem(invalidItem: InvalidItem, callback: (InvalidItem?) -> Unit)
 
-    fun getInvalidItem(): InvalidItem?
+    fun getInvalidItem(callback: (InvalidItem?) -> Unit)
 }
