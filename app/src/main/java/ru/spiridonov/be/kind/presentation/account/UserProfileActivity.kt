@@ -64,6 +64,5 @@ class UserProfileActivity : AppCompatActivity() {
     companion object {
         fun newIntent(context: Context) =
             Intent(context, UserProfileActivity::class.java)
-
     }
 }

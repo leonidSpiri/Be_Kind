@@ -4,7 +4,9 @@ import android.app.Application
 import dagger.BindsInstance
 import dagger.Component
 import ru.spiridonov.be.kind.BeKindApp
+import ru.spiridonov.be.kind.presentation.InvalidHelpActivity
 import ru.spiridonov.be.kind.presentation.MainActivity
+import ru.spiridonov.be.kind.presentation.VolunteerHelpActivity
 import ru.spiridonov.be.kind.presentation.account.AccountActivity
 import ru.spiridonov.be.kind.presentation.account.UserProfileActivity
 import ru.spiridonov.be.kind.presentation.account.ui.LoginFragment
@@ -24,6 +26,8 @@ interface ApplicationComponent {
     fun inject(activity: AccountActivity)
     fun inject(activity: UserProfileActivity)
     fun inject(activity: VerifiedUserActivity)
+    fun inject(activity: InvalidHelpActivity)
+    fun inject(activity: VolunteerHelpActivity)
     fun inject(fragment: RegisterFragment)
     fun inject(fragment: LoginFragment)
     fun inject(application: BeKindApp)

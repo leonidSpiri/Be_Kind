@@ -38,3 +38,4 @@ data class InvalidItem(
         isCertOfDisabilityConfirmed = false
     )
 }
+//TODO: add user rating and gender

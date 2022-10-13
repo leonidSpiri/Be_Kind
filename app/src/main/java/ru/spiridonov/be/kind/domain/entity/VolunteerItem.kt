@@ -34,3 +34,5 @@ data class VolunteerItem(
         isCertOfMedicalEduConfirmed = false
     )
 }
+
+//TODO: add user rating; gender; count of ended help;

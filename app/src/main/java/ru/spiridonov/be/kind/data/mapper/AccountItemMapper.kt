@@ -37,7 +37,7 @@ class AccountItemMapper @Inject constructor() {
     }
 
     fun mapInvalidItemToAccountItem(invalidItem: InvalidItem) = AccountItem(
-        type = "invalid",
+        type = INVALID_TYPE,
         surName = invalidItem.surName,
         password = "",
         name = invalidItem.name,
@@ -55,7 +55,7 @@ class AccountItemMapper @Inject constructor() {
 
 
     fun mapVolunteerItemToAccountItem(volunteerItem: VolunteerItem) = AccountItem(
-        type = "volunteer",
+        type = VOLUNTEER_TYPE,
         surName = volunteerItem.surName,
         password = "",
         name = volunteerItem.name,
@@ -70,4 +70,9 @@ class AccountItemMapper @Inject constructor() {
         isPassportConfirmed = volunteerItem.isPassportConfirmed,
         isCertConfirmed = volunteerItem.isCertOfMedicalEduConfirmed,
     )
+
+    companion object {
+        private const val INVALID_TYPE = "invalid_type"
+        private const val VOLUNTEER_TYPE = "volunteer_type"
+    }
 }
