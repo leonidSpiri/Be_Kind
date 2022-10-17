@@ -1,6 +1,5 @@
 package ru.spiridonov.be.kind.data.repository
 
-import android.util.Log
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
@@ -50,13 +49,12 @@ class VolunteerItemRepositoryImpl @Inject constructor(
                         callback.invoke(it)
                         if (isUserVerifiedUseCase()) {
                             sharedPref.setVolunteerAccountInfo(it.copy(isAccountConfirmed = true))
-                            if (!volunteerItem.isAccountConfirmed){
+                            if (!volunteerItem.isAccountConfirmed) {
                                 CoroutineScope(Dispatchers.IO).launch {
                                     editVolunteerItem(volunteerItem.copy(isAccountConfirmed = true)) {}
                                 }
                             }
-                        }
-                        else
+                        } else
                             sharedPref.setVolunteerAccountInfo(it.copy(isAccountConfirmed = false))
                         val item = sharedPref.getVolunteerAccountInfo()
                         if (item.uuid.isEmpty()) callback(null)

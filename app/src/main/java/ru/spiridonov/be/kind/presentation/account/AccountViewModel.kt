@@ -35,8 +35,7 @@ class AccountViewModel @Inject constructor(
     private val editVolunteerItemUseCase: EditVolunteerItemUseCase,
     private val accountItemMapper: AccountItemMapper,
     private val deleteAccountUseCase: DeleteAccountUseCase,
-    private val logoutUseCase: LogoutUseCase,
-    private val sendEmailVerificationUseCase: SendEmailVerificationUseCase
+    private val logoutUseCase: LogoutUseCase
 ) : ViewModel() {
 
     private val _errorInputEmail = MutableLiveData<Boolean>()
@@ -63,12 +62,17 @@ class AccountViewModel @Inject constructor(
     private val _errorInputCity = MutableLiveData<Boolean>()
     val errorInputCity: LiveData<Boolean>
         get() = _errorInputCity
+    private val _errorInputGender = MutableLiveData<Boolean>()
+    val errorInputGender: LiveData<Boolean>
+        get() = _errorInputGender
     private val _shouldCloseScreen = MutableLiveData<Unit>()
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
     private val _shouldCloseLoginScreen = MutableLiveData<String>()
     val shouldCloseLoginScreen: LiveData<String>
         get() = _shouldCloseLoginScreen
+
+    val spinnerGenderSelected = MutableLiveData<String>()
 
     private var uuid = ""
 
@@ -197,6 +201,7 @@ class AccountViewModel @Inject constructor(
                             surName = parseStroke(accountItem.surName!!),
                             password = parseStroke(accountItem.password),
                             name = parseStroke(accountItem.name!!),
+                            gender = parseStroke(spinnerGenderSelected.value),
                             lastname = parseStroke(accountItem.lastname!!),
                             personalPhone = parseStroke(accountItem.personalPhone!!),
                             email = parseStroke(accountItem.email),
@@ -212,6 +217,7 @@ class AccountViewModel @Inject constructor(
                             surName = parseStroke(accountItem.surName!!),
                             password = parseStroke(accountItem.password),
                             name = parseStroke(accountItem.name!!),
+                            gender = parseStroke(spinnerGenderSelected.value),
                             lastname = parseStroke(accountItem.lastname!!),
                             personalPhone = parseStroke(accountItem.personalPhone!!),
                             email = parseStroke(accountItem.email),
@@ -260,42 +266,45 @@ class AccountViewModel @Inject constructor(
     }
 
     private fun validateInput(accountItem: AccountItem): Boolean {
-        var result = true
+        if (spinnerGenderSelected.value.isNullOrEmpty()) {
+            _errorInputGender.value = true
+            return false
+        }
         with(accountItem) {
             if (email.isBlank()) {
                 _errorInputEmail.value = true
-                result = false
+                return false
             }
             if (password.isBlank() || password.length < 6) {
                 _errorInputPassword.value = true
-                result = false
+                return false
             }
             if (surName == null || surName.isBlank()) {
                 _errorInputSurname.value = true
-                result = false
+                return false
             }
             if (name == null || name.isBlank()) {
                 _errorInputName.value = true
-                result = false
+                return false
             }
             if (lastname == null || lastname.isBlank()) {
                 _errorInputLastName.value = true
-                result = false
+                return false
             }
             if (personalPhone == null || personalPhone!!.isBlank()) {
                 _errorInputPersonalNumber.value = true
-                result = false
+                return false
             }
             if (birthday == null) {
                 _errorInputBirthday.value = true
-                result = false
+                return false
             }
             if (city == null || city!!.isBlank()) {
                 _errorInputCity.value = true
-                result = false
+                return false
             }
         }
-        return result
+        return true
     }
 
     private fun getDateHour(): String {
@@ -338,12 +347,15 @@ class AccountViewModel @Inject constructor(
         _errorInputCity.value = false
     }
 
+    fun resetErrorInputGender() {
+        _errorInputGender.value = false
+    }
+
     private fun finishWork() {
         _shouldCloseScreen.value = Unit
     }
 
     companion object {
-        private const val REGISTER_TYPE = "register_type"
         private const val INVALID_TYPE = "invalid_type"
     }
 }

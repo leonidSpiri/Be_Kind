@@ -7,9 +7,13 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import ru.spiridonov.be.kind.BeKindApp
+import ru.spiridonov.be.kind.R
 import ru.spiridonov.be.kind.databinding.FragmentRegisterBinding
 import ru.spiridonov.be.kind.domain.entity.AccountItem
 import ru.spiridonov.be.kind.presentation.account.AccountViewModel
@@ -60,6 +64,21 @@ class RegisterFragment : Fragment() {
         addTextChangeListeners()
         listenerRegisterBtn()
         observeViewModel()
+        setAdapter()
+    }
+
+    private fun setAdapter() {
+        val genderArray = arrayOf("Мужской", "Женский")
+        val adapter = ArrayAdapter(
+            requireActivity(),
+            R.layout.dropdown_menu_popup_item,
+            genderArray
+        )
+        (binding.dropdownGender as? AutoCompleteTextView)?.setAdapter(adapter)
+        binding.dropdownGender.onItemClickListener =
+            AdapterView.OnItemClickListener { _, _, position, _ ->
+                viewModel.spinnerGenderSelected.value = genderArray[position]
+            }
     }
 
     private fun listenerRegisterBtn() =
@@ -184,6 +203,17 @@ class RegisterFragment : Fragment() {
 
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                     viewModel?.resetErrorInputCity()
+                }
+
+                override fun afterTextChanged(p0: Editable?) {
+                }
+            })
+            dropdownGender.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    viewModel?.resetErrorInputGender()
                 }
 
                 override fun afterTextChanged(p0: Editable?) {

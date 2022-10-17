@@ -207,7 +207,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginTop="20dp"
                             android:background="@drawable/ic_mobile"
-                            android:contentDescription="@string/mobile" />
+                            android:contentDescription="@string/personal_number" />
 
                         <TextView
                             android:id="@+id/textView_show_mobile"
@@ -241,7 +241,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginTop="20dp"
                             android:background="@drawable/ic_check"
-                            android:contentDescription="@string/mobile" />
+                            android:contentDescription="@string/email" />
 
                         <TextView
                             android:id="@+id/textView_email_confirmed"
@@ -275,7 +275,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginTop="20dp"
                             android:background="@drawable/ic_check"
-                            android:contentDescription="@string/mobile" />
+                            android:contentDescription="@string/password" />
 
                         <TextView
                             android:id="@+id/textView_passport_confirmed"
@@ -310,7 +310,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginTop="20dp"
                             android:background="@drawable/ic_check"
-                            android:contentDescription="@string/mobile" />
+                            android:contentDescription="@string/certl_confirmed" />
 
                         <TextView
                             android:id="@+id/textView_cert_confirmed"
@@ -384,13 +384,6 @@
                     android:theme="@style/Platform.MaterialComponents"
                     app:cornerRadius="5dp"
                     app:strokeColor="@color/white" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="50dp"
-                    android:text="@string/registered_user_since"
-                    android:textAlignment="center" />
 
             </LinearLayout>
         </ScrollView>

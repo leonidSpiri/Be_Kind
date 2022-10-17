@@ -7,7 +7,10 @@ data class VolunteerItem(
     val lastname: String,
     var personalPhone: String,
     var email: String,
-    val birthday:  String? = null,
+    val birthday: String? = null,
+    val gender: String,
+    var userRating: Int = 0,
+    var endedHelp: Int = 0,
     var city: String,
     var helpReason: List<String>,
     var photoUrl: String? = null,
@@ -26,6 +29,9 @@ data class VolunteerItem(
         personalPhone = "",
         email = "",
         birthday = null,
+        gender = "",
+        userRating = 0,
+        endedHelp = 0,
         city = "",
         helpReason = listOf(),
         photoUrl = null,
@@ -34,5 +40,3 @@ data class VolunteerItem(
         isCertOfMedicalEduConfirmed = false
     )
 }
-
-//TODO: add user rating; gender; count of ended help;

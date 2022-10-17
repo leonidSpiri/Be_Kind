@@ -6,6 +6,8 @@ data class InvalidItem(
     val name: String,
     val lastname: String,
     var personalPhone: String,
+    val gender: String,
+    var userRating: Int = 0,
     var relativePhone: String? = null,
     var email: String,
     val birthday:  String? = null,
@@ -27,6 +29,8 @@ data class InvalidItem(
         lastname = "",
         personalPhone = "",
         relativePhone = null,
+        gender = "",
+        userRating = 0,
         email = "",
         birthday = null,
         city = "",
@@ -38,4 +42,3 @@ data class InvalidItem(
         isCertOfDisabilityConfirmed = false
     )
 }
-//TODO: add user rating and gender

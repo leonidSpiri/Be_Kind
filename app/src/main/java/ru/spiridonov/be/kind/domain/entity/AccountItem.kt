@@ -8,6 +8,7 @@ data class AccountItem(
     val lastname: String? = null,
     var personalPhone: String? = null,
     var email: String,
+    val gender: String? = null,
     val birthday: String? = null,
     var city: String? = null,
     var relativePhone: String? = null,

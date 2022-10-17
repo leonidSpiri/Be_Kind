@@ -41,6 +41,12 @@ class SharedPref @Inject constructor() {
             city = getUnnamedSharedPref("be_kind_account_invalid", "city") ?: "",
             address = getUnnamedSharedPref("be_kind_account_invalid", "address"),
             helpReason = listOf(),
+            gender = getUnnamedSharedPref("be_kind_account_invalid", "gender") ?: "",
+            userRating = getUnnamedSharedPref(
+                "be_kind_account_invalid",
+                "userRating"
+            )?.toIntOrNull()
+                ?: 0,
             photoUrl = getUnnamedSharedPref("be_kind_account_invalid", "photoUrl"),
             isAccountConfirmed = context.getSharedPreferences(
                 "be_kind_account_invalid",
@@ -71,7 +77,8 @@ class SharedPref @Inject constructor() {
             }
             setUnnamedSharedPref("be_kind_account_invalid", "email", email)
             setUnnamedSharedPref("be_kind_account_invalid", "birthday", birthday ?: "")
-            setUnnamedSharedPref("be_kind_account_invalid", "city", city)
+            setUnnamedSharedPref("be_kind_account_invalid", "gender", gender)
+            setUnnamedSharedPref("be_kind_account_invalid", "userRating", userRating.toString())
             address?.let { setUnnamedSharedPref("be_kind_account_invalid", "address", it) }
             photoUrl?.let { setUnnamedSharedPref("be_kind_account_invalid", "photoUrl", it) }
             context.getSharedPreferences("be_kind_account_invalid", Context.MODE_PRIVATE).edit()
@@ -94,6 +101,14 @@ class SharedPref @Inject constructor() {
             birthday = getUnnamedSharedPref("be_kind_account_volunteer", "birthday") ?: "",
             city = getUnnamedSharedPref("be_kind_account_volunteer", "city") ?: "",
             helpReason = listOf(),
+            gender = getUnnamedSharedPref("be_kind_account_invalid", "gender") ?: "",
+            userRating = getUnnamedSharedPref(
+                "be_kind_account_invalid",
+                "userRating"
+            )?.toIntOrNull()
+                ?: 0,
+            endedHelp = getUnnamedSharedPref("be_kind_account_invalid", "endedHelp")?.toIntOrNull()
+                ?: 0,
             photoUrl = getUnnamedSharedPref("be_kind_account_volunteer", "photoUrl"),
             isAccountConfirmed = context.getSharedPreferences(
                 "be_kind_account_volunteer",
@@ -122,6 +137,9 @@ class SharedPref @Inject constructor() {
             setUnnamedSharedPref("be_kind_account_volunteer", "email", email)
             setUnnamedSharedPref("be_kind_account_volunteer", "birthday", birthday ?: "")
             setUnnamedSharedPref("be_kind_account_volunteer", "city", city)
+            setUnnamedSharedPref("be_kind_account_invalid", "gender", gender)
+            setUnnamedSharedPref("be_kind_account_invalid", "userRating", userRating.toString())
+            setUnnamedSharedPref("be_kind_account_invalid", "endedHelp", endedHelp.toString())
             photoUrl?.let { setUnnamedSharedPref("be_kind_account_volunteer", "photoUrl", it) }
             context.getSharedPreferences("be_kind_account_volunteer", Context.MODE_PRIVATE).edit()
                 .putBoolean("isAccountConfirmed", isAccountConfirmed).apply()

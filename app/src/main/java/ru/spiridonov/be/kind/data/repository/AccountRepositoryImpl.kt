@@ -1,7 +1,6 @@
 package ru.spiridonov.be.kind.data.repository
 
 import android.util.Log
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
@@ -187,28 +186,30 @@ class AccountRepositoryImpl @Inject constructor(
     }
 
     override fun deleteAccount(uuid: String, reason: String?): Boolean {
-        val userCollection = db.collection("users").document("UsersCollection")
-        val completeListener = { it: Task<Void> ->
-            if (!it.isSuccessful) {
-                throw RuntimeException(
-                    "deleteAccount: failure" +
-                            " ${it.exception?.message}"
-                )
-            } else
-                auth.currentUser?.delete()
+        with(db.collection("users").document("UsersCollection")) {
+            collection("invalids")
+                .document(auth.currentUser?.uid!!).delete()
+                .addOnCompleteListener {
+                    auth.currentUser?.delete()
+                }
+                .addOnFailureListener {
+                    throw RuntimeException(
+                        "deleteAccount: failure" +
+                                " ${it.message}"
+                    )
+                }
+            collection("volunteers")
+                .document(auth.currentUser?.uid!!).delete()
+                .addOnCompleteListener {
+                    auth.currentUser?.delete()
+                }
+                .addOnFailureListener {
+                    throw RuntimeException(
+                        "deleteAccount: failure" +
+                                " ${it.message}"
+                    )
+                }
         }
-        userCollection.collection("invalids")
-            .document(auth.currentUser?.uid!!).delete()
-            .addOnCompleteListener {
-                completeListener(it)
-            }
-
-        userCollection.collection("volunteers")
-            .document(auth.currentUser?.uid!!).delete()
-            .addOnCompleteListener {
-                completeListener(it)
-            }
-
         return true
     }
 
@@ -228,6 +229,7 @@ class AccountRepositoryImpl @Inject constructor(
             currentUser != null
         } catch (e: Exception) {
             Log.d("AccountRepositoryImpl", "isUserLoggedIn: ${e.message}")
+            logout()
             false
         }
     }
