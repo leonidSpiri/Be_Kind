@@ -13,7 +13,7 @@
     <string name="city">Город проживания</string>
     <string name="loading">Загрузка</string>
     <string name="welcome">Добро пожаловать, %s!</string>
-    <string name="user_display_picture">user_display_picture</string>
+    <string name="confirm">Подтвердить</string>
     <string name="dob">dob</string>
     <string name="gender">Пол</string>
     <string name="logout">Выйти</string>
@@ -24,8 +24,14 @@
     <string name="email_not_confirmed">Почта не подтверждена</string>
     <string name="certl_confirmed">Сертификат подтвержден</string>
     <string name="cert_not_confirmed">Сертификат не подтвержден</string>
-    <string name="confirm">Подтвердить / Изменить документы</string>
+    <string name="confirm_document">Подтвердить / Изменить документы</string>
     <string name="complete_work">Загрузить фотографии</string>
     <string name="make_photo">Сделать фото</string>
     <string name="get_from_gallery">Загрузить из галереи</string>
+    <string name="type_need_help">Необходимый вид помощи</string>
+    <string name="volunteer_gender">Желаемый пол волонтера</string>
+    <string name="volunteer_age">Желаемый возраст волонтера</string>
+    <string name="approx_address">Примерный адрес</string>
+    <string name="help_start_time">Необходимое время помощи</string>
+    <string name="help_description">Описание помощи</string>
 </resources>
