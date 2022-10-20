@@ -41,16 +41,18 @@ class MainActivity : AppCompatActivity() {
             viewModel.getUserInfo { account ->
                 if (account != null) {
                     this.account = account
-                    if (account.type == INVALID_TYPE)
+                    binding.btnHelp.visibility = View.VISIBLE
+                    if (account.type == INVALID_TYPE) {
                         binding.btnHelp.text = "Попросить помощь"
-                    binding.btnHelp.setOnClickListener {
-                        startActivity(InvalidHelpActivity.newIntent(this))
+                        binding.btnHelp.setOnClickListener {
+                            startActivity(InvalidHelpActivity.newIntent(this))
+                        }
                     }
-                    if (account.type == VOLUNTEER_TYPE)
+                    if (account.type == VOLUNTEER_TYPE) {
                         binding.btnHelp.text = "Предложить помощь"
-                    binding.btnHelp.setOnClickListener {
-                        //startActivity(VolunteerHelpActivity.newIntent(this))
-                        startActivity(InvalidHelpActivity.newIntent(this))
+                        binding.btnHelp.setOnClickListener {
+                            startActivity(VolunteerHelpActivity.newIntent(this))
+                        }
                     }
                 }
             }

@@ -18,6 +18,7 @@ import ru.spiridonov.be.kind.domain.usecases.invalid_item.EditInvalidItemUseCase
 import ru.spiridonov.be.kind.domain.usecases.invalid_item.GetInvalidItemUseCase
 import ru.spiridonov.be.kind.domain.usecases.volunteer_item.EditVolunteerItemUseCase
 import ru.spiridonov.be.kind.domain.usecases.volunteer_item.GetVolunteerItemUseCase
+import ru.spiridonov.be.kind.utils.AllUtils
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -144,7 +145,6 @@ class AccountViewModel @Inject constructor(
             }
         }
 
-
     fun getUserInfo(callback: (AccountItem?) -> Unit) {
         getVolunteerItemUseCase.invoke { volunteerItem ->
             if (volunteerItem != null) {
@@ -163,7 +163,6 @@ class AccountViewModel @Inject constructor(
                 uuid = invalidItem.uuid
                 callback(accountItem)
             }
-            callback(null)
         }
     }
 
@@ -189,7 +188,6 @@ class AccountViewModel @Inject constructor(
         }
         return true
     }
-
 
     fun registerAccount(accountItem: AccountItem) {
         if (validateInput(accountItem)) {
@@ -266,45 +264,50 @@ class AccountViewModel @Inject constructor(
     }
 
     private fun validateInput(accountItem: AccountItem): Boolean {
+        var result = true
         if (spinnerGenderSelected.value.isNullOrEmpty()) {
             _errorInputGender.value = true
-            return false
+            result = false
         }
         with(accountItem) {
+
             if (email.isBlank()) {
                 _errorInputEmail.value = true
-                return false
+                result = false
             }
             if (password.isBlank() || password.length < 6) {
                 _errorInputPassword.value = true
-                return false
+                result = false
             }
             if (surName == null || surName.isBlank()) {
                 _errorInputSurname.value = true
-                return false
+                result = false
             }
             if (name == null || name.isBlank()) {
                 _errorInputName.value = true
-                return false
+                result = false
             }
             if (lastname == null || lastname.isBlank()) {
                 _errorInputLastName.value = true
-                return false
+                result = false
             }
-            if (personalPhone == null || personalPhone!!.isBlank()) {
+            if (personalPhone == null || personalPhone!!.isBlank() || !AllUtils().isItPhone(
+                    personalPhone!!
+                )
+            ) {
                 _errorInputPersonalNumber.value = true
-                return false
+                result = false
             }
             if (birthday == null) {
                 _errorInputBirthday.value = true
-                return false
+                result = false
             }
             if (city == null || city!!.isBlank()) {
                 _errorInputCity.value = true
-                return false
+                result = false
             }
         }
-        return true
+        return result
     }
 
     private fun getDateHour(): String {

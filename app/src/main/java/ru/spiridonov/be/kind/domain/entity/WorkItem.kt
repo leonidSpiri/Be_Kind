@@ -1,18 +1,22 @@
 package ru.spiridonov.be.kind.domain.entity
 
 data class WorkItem(
-    val id: Int,
+    var id: String,
     var description: String,
-    var isDone: Boolean,
-    val whoNeedHelpId: Int,
+    var isDone: Boolean = false,
+    val whoNeedHelpId: String,
     val timestamp: Long,
     val whenNeedHelp: Long,
     val kindOfHelp: String,
-    val startCoordinates: String,
+    val startCoordinates: String? = null,
     val address: String,
-    var realCoordinatesInvalid: String,
-    val degreeOfVolunteer: Int,
-    val needMedicineCertificate: Boolean,
-    val whoHelpId: Int,
-    var realCoordinatesVolunteer: String,
-    )
+    val invalidPhone: String,
+    val volunteerPhone: String? = null,
+    val volunteerGender: String,
+    val volunteerAge: String,
+    var realCoordinatesInvalid: String? = null,
+    val degreeOfVolunteer: Int? = null,
+    val needMedicineCertificate: Boolean = false,
+    val whoHelpId: String? = null,
+    var realCoordinatesVolunteer: String? = null
+)

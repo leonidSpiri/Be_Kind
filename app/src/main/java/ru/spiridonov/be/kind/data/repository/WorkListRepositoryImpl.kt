@@ -1,5 +1,6 @@
 package ru.spiridonov.be.kind.data.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import ru.spiridonov.be.kind.data.mapper.WorkListMapper
 import ru.spiridonov.be.kind.domain.entity.WorkItem
@@ -10,7 +11,7 @@ class WorkListRepositoryImpl @Inject constructor(
     private val mapper: WorkListMapper
 ) : WorkListRepository {
     override suspend fun editWorkItem(workItem: WorkItem) {
-        TODO("Not yet implemented")
+        Log.d("TAG", "editWorkItem: $workItem")
     }
 
     override suspend fun getGeneralWorkList(): Pair<String, String> {
