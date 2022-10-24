@@ -33,7 +33,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+    }
 
+    override fun onResume() {
+        super.onResume()
+        createScreen()
+    }
+
+    private fun createScreen() {
         if (viewModel.isUserLoggedIn()) {
             binding.btnLoginInvalid.visibility = View.GONE
             binding.btnLoginVolunteer.visibility = View.GONE
@@ -43,13 +50,13 @@ class MainActivity : AppCompatActivity() {
                     this.account = account
                     binding.btnHelp.visibility = View.VISIBLE
                     if (account.type == INVALID_TYPE) {
-                        binding.btnHelp.text = "Попросить помощь"
+                        binding.btnHelp.text = "Мне нужна помощь"
                         binding.btnHelp.setOnClickListener {
                             startActivity(InvalidHelpActivity.newIntent(this))
                         }
                     }
                     if (account.type == VOLUNTEER_TYPE) {
-                        binding.btnHelp.text = "Предложить помощь"
+                        binding.btnHelp.text = "Я хочу помочь"
                         binding.btnHelp.setOnClickListener {
                             startActivity(VolunteerHelpActivity.newIntent(this))
                         }
@@ -62,9 +69,6 @@ class MainActivity : AppCompatActivity() {
             binding.btnLoginInvalid.visibility = View.VISIBLE
             binding.btnLoginVolunteer.visibility = View.VISIBLE
         }
-
-
-
         with(binding) {
             btnLoginInvalid.setOnClickListener {
                 startActivity(AccountActivity.newIntentInvalid(this@MainActivity))

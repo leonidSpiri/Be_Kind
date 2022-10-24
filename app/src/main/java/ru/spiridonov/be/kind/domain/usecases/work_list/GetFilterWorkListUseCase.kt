@@ -4,9 +4,9 @@ import ru.spiridonov.be.kind.domain.entity.WorkItem
 import ru.spiridonov.be.kind.domain.repository.WorkListRepository
 import javax.inject.Inject
 
-class GetWorkItemUseCase @Inject constructor(
+class GetFilterWorkListUseCase @Inject constructor(
     private val repository: WorkListRepository
 ) {
-    suspend operator fun invoke(workItemId: String, callback: (WorkItem) -> Unit) =
-        repository.getWorkItem(workItemId, callback)
+    suspend operator fun invoke(query: String, callback: (List<WorkItem>) -> Unit) =
+        repository.getFilterWorkList(query, callback)
 }

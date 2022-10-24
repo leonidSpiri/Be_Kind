@@ -9,6 +9,8 @@ import ru.spiridonov.be.kind.domain.entity.InvalidItem
 import ru.spiridonov.be.kind.domain.entity.WorkItem
 import ru.spiridonov.be.kind.domain.usecases.invalid_item.GetInvalidItemUseCase
 import ru.spiridonov.be.kind.domain.usecases.work_list.EditWorkItemUseCase
+import ru.spiridonov.be.kind.domain.usecases.work_list.GetWorkItemUseCase
+import ru.spiridonov.be.kind.domain.usecases.work_list.GetWorkListUseCase
 import ru.spiridonov.be.kind.utils.AllUtils
 import java.text.SimpleDateFormat
 import java.util.*
@@ -16,7 +18,9 @@ import javax.inject.Inject
 
 class HelpViewModel @Inject constructor(
     private val getInvalidItemUseCase: GetInvalidItemUseCase,
-    private val editWorkItemUseCase: EditWorkItemUseCase
+    private val editWorkItemUseCase: EditWorkItemUseCase,
+    private val getWorkListUseCase: GetWorkListUseCase,
+    private val getWorkItemUseCase: GetWorkItemUseCase
 ) : ViewModel() {
 
     private val _errorInputHelpType = MutableLiveData<Boolean>()
@@ -38,24 +42,43 @@ class HelpViewModel @Inject constructor(
     val errorInputInvalidPhone: LiveData<Boolean>
         get() = _errorInputInvalidPhone
 
+    private val _workList = MutableLiveData<List<WorkItem>>()
+    val workList: LiveData<List<WorkItem>>
+        get() = _workList
+
     val spinnerTypeSelected = MutableLiveData<String>()
     val spinnerGenderSelected = MutableLiveData<String>()
     val spinnerAgeSelected = MutableLiveData<String>()
 
     private var uuid = ""
 
-    fun getInvalidUserInfo(callback: (InvalidItem?) -> Unit) {
-        getInvalidItemUseCase.invoke { invalidItem ->
-            if (invalidItem != null) {
-                uuid = invalidItem.uuid
-                callback(invalidItem)
+    fun getWorkList() =
+        viewModelScope.launch {
+            getWorkListUseCase.invoke {
+                _workList.postValue(it)
             }
         }
-    }
+
+    fun getWorkItem(id:String, callback: (WorkItem?) -> Unit) =
+        viewModelScope.launch {
+            getWorkItemUseCase.invoke(id) {
+                callback(it)
+            }
+        }
+
+    fun getInvalidUserInfo(callback: (InvalidItem?) -> Unit) =
+        viewModelScope.launch {
+            getInvalidItemUseCase.invoke { invalidItem ->
+                if (invalidItem != null) {
+                    uuid = invalidItem.uuid
+                    callback(invalidItem)
+                }
+            }
+        }
 
     fun createInvalidWork(address: String, time: String, description: String, phone: String) {
-        val idStr = (uuid.dropLast(uuid.length / 2) + (UUID.randomUUID().toString()
-            .dropLast(4)))
+        val randomUUID = UUID.randomUUID().toString()
+        val idStr = (uuid.dropLast(uuid.length / 2) + (randomUUID.dropLast(randomUUID.length / 2)))
         if (validateInput(idStr, address, time, description, phone)) {
             val whenNeedHelp = stringToDateLong(time)
             viewModelScope.launch {

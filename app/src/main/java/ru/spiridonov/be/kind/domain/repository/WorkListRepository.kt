@@ -1,16 +1,15 @@
 package ru.spiridonov.be.kind.domain.repository
 
-import androidx.lifecycle.LiveData
 import ru.spiridonov.be.kind.domain.entity.WorkItem
 
 interface WorkListRepository {
     suspend fun editWorkItem(workItem: WorkItem)
 
-    suspend fun getGeneralWorkList(): Pair<String, String>
+    suspend fun getFilterWorkList(query: String, callback: (List<WorkItem>) -> Unit)
 
-    fun getWorkList(): LiveData<List<WorkItem>>
+    suspend fun getWorkList(callback: (List<WorkItem>) -> Unit)
 
-    fun getWorkItem(workItemId: Int): LiveData<WorkItem>
+    suspend fun getWorkItem(workItemId: String, callback: (WorkItem) -> Unit)
 
-    fun loadWorkData()
+    fun getLocalWorkItem(callback: (WorkItem) -> Unit)
 }

@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import ru.spiridonov.be.kind.BeKindApp
@@ -58,6 +59,8 @@ class InvalidHelpActivity : AppCompatActivity() {
                 description = binding.etDescription.text.toString(),
                 phone = binding.etPersonalNumber.text.toString()
             )
+            Toast.makeText(this, "Заявка отправлена", Toast.LENGTH_SHORT).show()
+            finish()
         }
     }
 

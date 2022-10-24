@@ -3,6 +3,7 @@ package ru.spiridonov.be.kind.presentation
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import ru.spiridonov.be.kind.BeKindApp
@@ -28,8 +29,18 @@ class VolunteerHelpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this, viewModelFactory)[HelpViewModel::class.java]
+        observeViewModel()
     }
 
+    private fun observeViewModel() {
+        viewModel.getWorkList()
+        viewModel.getWorkItem("zius1gEt0seSg23c3d3289-490f-4b97-972f-dd188610") {
+            Log.d("TAG", "observeViewModel: $it")
+        }
+        viewModel.workList.observe(this) {
+            //Log.d("TAG", "observeViewModel: $it")
+        }
+    }
 
     companion object {
         fun newIntent(context: Context) =

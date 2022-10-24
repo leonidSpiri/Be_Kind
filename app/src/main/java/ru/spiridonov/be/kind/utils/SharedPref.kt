@@ -101,13 +101,13 @@ class SharedPref @Inject constructor() {
             birthday = getUnnamedSharedPref("be_kind_account_volunteer", "birthday") ?: "",
             city = getUnnamedSharedPref("be_kind_account_volunteer", "city") ?: "",
             helpReason = listOf(),
-            gender = getUnnamedSharedPref("be_kind_account_invalid", "gender") ?: "",
+            gender = getUnnamedSharedPref("be_kind_account_volunteer", "gender") ?: "",
             userRating = getUnnamedSharedPref(
                 "be_kind_account_invalid",
                 "userRating"
             )?.toIntOrNull()
                 ?: 0,
-            endedHelp = getUnnamedSharedPref("be_kind_account_invalid", "endedHelp")?.toIntOrNull()
+            endedHelp = getUnnamedSharedPref("be_kind_account_volunteer", "endedHelp")?.toIntOrNull()
                 ?: 0,
             photoUrl = getUnnamedSharedPref("be_kind_account_volunteer", "photoUrl"),
             isAccountConfirmed = context.getSharedPreferences(
@@ -137,9 +137,9 @@ class SharedPref @Inject constructor() {
             setUnnamedSharedPref("be_kind_account_volunteer", "email", email)
             setUnnamedSharedPref("be_kind_account_volunteer", "birthday", birthday ?: "")
             setUnnamedSharedPref("be_kind_account_volunteer", "city", city)
-            setUnnamedSharedPref("be_kind_account_invalid", "gender", gender)
-            setUnnamedSharedPref("be_kind_account_invalid", "userRating", userRating.toString())
-            setUnnamedSharedPref("be_kind_account_invalid", "endedHelp", endedHelp.toString())
+            setUnnamedSharedPref("be_kind_account_volunteer", "gender", gender)
+            setUnnamedSharedPref("be_kind_account_volunteer", "userRating", userRating.toString())
+            setUnnamedSharedPref("be_kind_account_volunteer", "endedHelp", endedHelp.toString())
             photoUrl?.let { setUnnamedSharedPref("be_kind_account_volunteer", "photoUrl", it) }
             context.getSharedPreferences("be_kind_account_volunteer", Context.MODE_PRIVATE).edit()
                 .putBoolean("isAccountConfirmed", isAccountConfirmed).apply()
