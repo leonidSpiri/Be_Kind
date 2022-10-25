@@ -1,14 +1,14 @@
 package ru.spiridonov.be.kind.presentation
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Toast
+import android.text.format.DateFormat.is24HourFormat
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import ru.spiridonov.be.kind.BeKindApp
@@ -16,15 +16,27 @@ import ru.spiridonov.be.kind.R
 import ru.spiridonov.be.kind.databinding.ActivityInvalidHelpBinding
 import ru.spiridonov.be.kind.presentation.viewmodels.HelpViewModel
 import ru.spiridonov.be.kind.presentation.viewmodels.ViewModelFactory
+import java.util.*
 import javax.inject.Inject
 
-class InvalidHelpActivity : AppCompatActivity() {
+class InvalidHelpActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
+    TimePickerDialog.OnTimeSetListener {
     private val binding by lazy {
         ActivityInvalidHelpBinding.inflate(layoutInflater)
     }
     private val component by lazy {
         (application as BeKindApp).component
     }
+    private var day = 0
+    private var month: Int = 0
+    private var year: Int = 0
+    private var hour: Int = 0
+    private var minute: Int = 0
+    private var myDay = 0
+    private var myMonth: Int = 0
+    private var myYear: Int = 0
+    private var myHour: Int = 0
+    private var myMinute: Int = 0
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -55,12 +67,27 @@ class InvalidHelpActivity : AppCompatActivity() {
         binding.btnConfirm.setOnClickListener {
             viewModel.createInvalidWork(
                 address = binding.etAddress.text.toString(),
-                time = binding.etTime.text.toString(),
                 description = binding.etDescription.text.toString(),
                 phone = binding.etPersonalNumber.text.toString()
             )
             Toast.makeText(this, "Заявка отправлена", Toast.LENGTH_SHORT).show()
             finish()
+        }
+
+        binding.btnGetDate.setOnClickListener {
+            val calendar: Calendar = Calendar.getInstance()
+            day = calendar.get(Calendar.DAY_OF_MONTH)
+            month = calendar.get(Calendar.MONTH)
+            year = calendar.get(Calendar.YEAR)
+            val datePickerDialog =
+                DatePickerDialog(
+                    this@InvalidHelpActivity,
+                    this@InvalidHelpActivity,
+                    year,
+                    month,
+                    day
+                )
+            datePickerDialog.show()
         }
     }
 
@@ -97,6 +124,32 @@ class InvalidHelpActivity : AppCompatActivity() {
             AdapterView.OnItemClickListener { _, _, position, _ ->
                 viewModel.spinnerAgeSelected.value = ageArray[position]
             }
+    }
+
+
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        myDay = dayOfMonth
+        myYear = year
+        myMonth = month
+        val calendar: Calendar = Calendar.getInstance()
+        hour = calendar.get(Calendar.HOUR)
+        minute = calendar.get(Calendar.MINUTE)
+        val timePickerDialog = TimePickerDialog(
+            this@InvalidHelpActivity, this@InvalidHelpActivity, hour, minute,
+            is24HourFormat(this@InvalidHelpActivity)
+        )
+        timePickerDialog.show()
+    }
+
+    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+        myHour = hourOfDay
+        myMinute = minute
+        binding.btnGetDate.text = "${myDay}.${myMonth + 1}.${myYear} ${myHour}:${myMinute}"
+        val longDate = viewModel.stringToDateLong(
+            "${myDay}.${myMonth + 1}.${myYear} ${myHour}:${myMinute}",
+        )
+        viewModel.selectedDate.value = if (longDate == -1L) null else longDate
+
     }
 
     private fun addTextChangeListeners() =
@@ -145,17 +198,9 @@ class InvalidHelpActivity : AppCompatActivity() {
                 override fun afterTextChanged(p0: Editable?) {
                 }
             })
-            etTime.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
-
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    viewModel?.resetErrorInputHelpTime()
-                }
-
-                override fun afterTextChanged(p0: Editable?) {
-                }
-            })
+            btnGetDate.setOnClickListener {
+                viewModel?.resetErrorInputHelpTime()
+            }
             etPersonalNumber.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
@@ -168,7 +213,6 @@ class InvalidHelpActivity : AppCompatActivity() {
                 }
             })
         }
-
 
 
 /*

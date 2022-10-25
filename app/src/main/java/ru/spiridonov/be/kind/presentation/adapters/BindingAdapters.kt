@@ -5,6 +5,8 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.google.android.material.textfield.TextInputLayout
 import ru.spiridonov.be.kind.R
+import java.text.SimpleDateFormat
+import java.util.*
 
 @BindingAdapter("errorInput")
 fun bindErrorInput(textInputLayout: TextInputLayout, isError: Boolean) {
@@ -49,4 +51,16 @@ fun textCertConfirmed(textView: TextView, isConfirmed: Boolean) {
         textView.text = textView.context.getString(R.string.cert_not_confirmed)
         textView.setTextColor(ContextCompat.getColor(textView.context, R.color.bad))
     }
+}
+
+@BindingAdapter("date")
+fun textDate(textView: TextView, date: Long) {
+    textView.text = longToTime(date)
+}
+
+
+private fun longToTime(time: Long): String {
+    val date = Date(time)
+    val format = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
+    return format.format(date)
 }

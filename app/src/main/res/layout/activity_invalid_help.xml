@@ -120,26 +120,20 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_time"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            <Button
+                android:id="@+id/btn_getDate"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_gravity="start"
+                android:enabled="true"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:errorInput="@{viewModel.errorInputHelpTime}"
+                android:text="Выбрать время помощи"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/til_address"
-                app:layout_constraintVertical_chainStyle="packed">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:hint="@string/help_start_time"
-                    android:inputType="time" />
-            </com.google.android.material.textfield.TextInputLayout>
+                app:layout_constraintVertical_chainStyle="packed" />
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -149,7 +143,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/til_time"
+                app:layout_constraintTop_toBottomOf="@+id/btn_getDate"
                 app:layout_constraintVertical_chainStyle="packed">
 
                 <com.google.android.material.textfield.TextInputEditText

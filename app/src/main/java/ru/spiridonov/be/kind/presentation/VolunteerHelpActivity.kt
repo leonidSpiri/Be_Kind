@@ -3,11 +3,11 @@ package ru.spiridonov.be.kind.presentation
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import ru.spiridonov.be.kind.BeKindApp
 import ru.spiridonov.be.kind.databinding.ActivityVolunteerHelpBinding
+import ru.spiridonov.be.kind.presentation.adapters.WorkItemAdapter
 import ru.spiridonov.be.kind.presentation.viewmodels.HelpViewModel
 import ru.spiridonov.be.kind.presentation.viewmodels.ViewModelFactory
 import javax.inject.Inject
@@ -34,11 +34,11 @@ class VolunteerHelpActivity : AppCompatActivity() {
 
     private fun observeViewModel() {
         viewModel.getWorkList()
-        viewModel.getWorkItem("zius1gEt0seSg23c3d3289-490f-4b97-972f-dd188610") {
-            Log.d("TAG", "observeViewModel: $it")
-        }
+        // viewModel.getWorkItem("zius1gEt0seSg23c3d3289-490f-4b97-972f-dd188610") {}
         viewModel.workList.observe(this) {
-            //Log.d("TAG", "observeViewModel: $it")
+            val workItemAdapter = WorkItemAdapter()
+            workItemAdapter.submitList(it)
+            binding.rvWorkList.adapter = workItemAdapter
         }
     }
 

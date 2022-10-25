@@ -49,6 +49,7 @@ class HelpViewModel @Inject constructor(
     val spinnerTypeSelected = MutableLiveData<String>()
     val spinnerGenderSelected = MutableLiveData<String>()
     val spinnerAgeSelected = MutableLiveData<String>()
+    val selectedDate = MutableLiveData<Long>()
 
     private var uuid = ""
 
@@ -76,11 +77,10 @@ class HelpViewModel @Inject constructor(
             }
         }
 
-    fun createInvalidWork(address: String, time: String, description: String, phone: String) {
+    fun createInvalidWork(address: String, description: String, phone: String) {
         val randomUUID = UUID.randomUUID().toString()
         val idStr = (uuid.dropLast(uuid.length / 2) + (randomUUID.dropLast(randomUUID.length / 2)))
-        if (validateInput(idStr, address, time, description, phone)) {
-            val whenNeedHelp = stringToDateLong(time)
+        if (validateInput(idStr, address, description, phone)) {
             viewModelScope.launch {
                 editWorkItemUseCase.invoke(
                     WorkItem(
@@ -88,7 +88,7 @@ class HelpViewModel @Inject constructor(
                         description = parseStroke(description),
                         whoNeedHelpId = uuid,
                         timestamp = System.currentTimeMillis(),
-                        whenNeedHelp = whenNeedHelp,
+                        whenNeedHelp = selectedDate.value!!,
                         kindOfHelp = spinnerTypeSelected.value!!,
                         invalidPhone = phone,
                         address = parseStroke(address),
@@ -103,7 +103,6 @@ class HelpViewModel @Inject constructor(
     private fun validateInput(
         id: String?,
         address: String,
-        time: String,
         description: String,
         phone: String
     ): Boolean {
@@ -114,10 +113,6 @@ class HelpViewModel @Inject constructor(
         }
         if (address.isEmpty()) {
             _errorInputAddress.value = true
-            result = false
-        }
-        if (time.isEmpty() || stringToDateLong(time) == -1L) {
-            _errorInputHelpTime.value = true
             result = false
         }
         if (description.isEmpty()) {
@@ -140,6 +135,10 @@ class HelpViewModel @Inject constructor(
             _errorInputVolGender.value = true
             result = false
         }
+        if (selectedDate.value == null) {
+            _errorInputHelpTime.value = true
+            result = false
+        }
         return result
     }
 
@@ -152,9 +151,9 @@ class HelpViewModel @Inject constructor(
 
     private fun parseStroke(input: String?) = input?.trim() ?: ""
 
-    private fun stringToDateLong(date: String) =
+    fun stringToDateLong(date: String) =
         try {
-            val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+            val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
             sdf.parse(date)?.time ?: -1L
         } catch (e: Exception) {
             -1L
