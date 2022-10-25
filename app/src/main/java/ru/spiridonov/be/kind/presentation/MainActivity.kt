@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                     if (account.type == VOLUNTEER_TYPE) {
                         binding.btnHelp.text = "Я хочу помочь"
                         binding.btnHelp.setOnClickListener {
-                            startActivity(VolunteerHelpActivity.newIntent(this))
+                            startActivity(VolunteerHelpListActivity.newIntent(this))
                         }
                     }
                 }

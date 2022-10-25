@@ -26,6 +26,13 @@
         android:theme="@style/Theme.BeKind"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".presentation.VolunteerActiveHelpItemActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".presentation.MainActivity"
             android:exported="true">
             <intent-filter>
@@ -33,11 +40,11 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".presentation.account.AccountActivity"
             android:exported="false">
@@ -45,7 +52,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".presentation.account.UserProfileActivity"
             android:exported="false">
@@ -53,7 +59,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".presentation.account.ui.VerifiedUserActivity"
             android:exported="false">
@@ -61,7 +66,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".presentation.InvalidHelpActivity"
             android:exported="false">
@@ -69,9 +73,8 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
-            android:name=".presentation.VolunteerHelpActivity"
+            android:name=".presentation.VolunteerHelpListActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

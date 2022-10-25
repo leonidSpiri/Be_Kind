@@ -35,9 +35,6 @@ class HelpViewModel @Inject constructor(
     private val _errorInputAddress = MutableLiveData<Boolean>()
     val errorInputAddress: LiveData<Boolean>
         get() = _errorInputAddress
-    private val _errorInputHelpTime = MutableLiveData<Boolean>()
-    val errorInputHelpTime: LiveData<Boolean>
-        get() = _errorInputHelpTime
     private val _errorInputInvalidPhone = MutableLiveData<Boolean>()
     val errorInputInvalidPhone: LiveData<Boolean>
         get() = _errorInputInvalidPhone
@@ -60,7 +57,7 @@ class HelpViewModel @Inject constructor(
             }
         }
 
-    fun getWorkItem(id:String, callback: (WorkItem?) -> Unit) =
+    fun getWorkItem(id: String, callback: (WorkItem?) -> Unit) =
         viewModelScope.launch {
             getWorkItemUseCase.invoke(id) {
                 callback(it)
@@ -136,7 +133,6 @@ class HelpViewModel @Inject constructor(
             result = false
         }
         if (selectedDate.value == null) {
-            _errorInputHelpTime.value = true
             result = false
         }
         return result
@@ -146,7 +142,6 @@ class HelpViewModel @Inject constructor(
     fun resetErrorInputVolGender() = _errorInputVolGender.postValue(false)
     fun resetErrorInputVolAge() = _errorInputVolAge.postValue(false)
     fun resetErrorInputAddress() = _errorInputAddress.postValue(false)
-    fun resetErrorInputHelpTime() = _errorInputHelpTime.postValue(false)
     fun resetErrorInputInvalidPhone() = _errorInputInvalidPhone.postValue(false)
 
     private fun parseStroke(input: String?) = input?.trim() ?: ""

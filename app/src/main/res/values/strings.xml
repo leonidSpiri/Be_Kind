@@ -34,4 +34,5 @@
     <string name="approx_address">Примерный адрес</string>
     <string name="help_start_time">Необходимое время помощи</string>
     <string name="help_description">Описание помощи</string>
+    <string name="choose_date_help">Выбрать время помощи</string>
 </resources>

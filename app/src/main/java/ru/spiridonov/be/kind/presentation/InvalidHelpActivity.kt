@@ -144,7 +144,8 @@ class InvalidHelpActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListe
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
         myHour = hourOfDay
         myMinute = minute
-        binding.btnGetDate.text = "${myDay}.${myMonth + 1}.${myYear} ${myHour}:${myMinute}"
+        binding.btnGetDate.text =
+            String.format(dateTimeString, myDay, (myMonth + 1), myYear, myHour, myMinute)
         val longDate = viewModel.stringToDateLong(
             "${myDay}.${myMonth + 1}.${myYear} ${myHour}:${myMinute}",
         )
@@ -198,9 +199,6 @@ class InvalidHelpActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListe
                 override fun afterTextChanged(p0: Editable?) {
                 }
             })
-            btnGetDate.setOnClickListener {
-                viewModel?.resetErrorInputHelpTime()
-            }
             etPersonalNumber.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
@@ -237,6 +235,7 @@ class InvalidHelpActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListe
  */
 
     companion object {
+        private const val dateTimeString = "%d.%d.%d %d:%d"
         private val helpTypeArray = arrayOf(
             "передвижение в городе", "прогулка недалеко от дома", "общение",
             "периодическая медицинская помощь", "помощь по хозяйству", "другое"

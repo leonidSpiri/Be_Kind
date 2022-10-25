@@ -12,12 +12,15 @@ import ru.spiridonov.be.kind.presentation.viewmodels.HelpViewModel
 import ru.spiridonov.be.kind.presentation.viewmodels.ViewModelFactory
 import javax.inject.Inject
 
-class VolunteerHelpActivity : AppCompatActivity() {
+class VolunteerHelpListActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityVolunteerHelpBinding.inflate(layoutInflater)
     }
     private val component by lazy {
         (application as BeKindApp).component
+    }
+    private val workItemAdapter by lazy {
+        WorkItemAdapter()
     }
 
     @Inject
@@ -30,20 +33,25 @@ class VolunteerHelpActivity : AppCompatActivity() {
         setContentView(binding.root)
         viewModel = ViewModelProvider(this, viewModelFactory)[HelpViewModel::class.java]
         observeViewModel()
+        setupRecyclerView()
     }
 
     private fun observeViewModel() {
         viewModel.getWorkList()
-        // viewModel.getWorkItem("zius1gEt0seSg23c3d3289-490f-4b97-972f-dd188610") {}
         viewModel.workList.observe(this) {
-            val workItemAdapter = WorkItemAdapter()
             workItemAdapter.submitList(it)
-            binding.rvWorkList.adapter = workItemAdapter
+        }
+    }
+
+    private fun setupRecyclerView() {
+        binding.rvWorkList.adapter = workItemAdapter
+        workItemAdapter.onWorkItemClickListener = {
+            startActivity(VolunteerActiveHelpItemActivity.newIntent(this, it.id))
         }
     }
 
     companion object {
         fun newIntent(context: Context) =
-            Intent(context, VolunteerHelpActivity::class.java)
+            Intent(context, VolunteerHelpListActivity::class.java)
     }
 }

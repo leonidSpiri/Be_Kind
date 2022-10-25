@@ -48,6 +48,13 @@
                 android:id="@+id/txt_address"
                 style="@style/OptionTextStyle"
                 android:layout_marginStart="5dp"
+                android:text="@{workItem.address}"
+                tools:text="Дата: 01.01.1970" />
+
+            <TextView
+                android:id="@+id/txt_date"
+                style="@style/OptionTextStyle"
+                android:layout_marginStart="5dp"
                 app:date="@{workItem.whenNeedHelp}"
                 tools:text="Дата: 01.01.1970" />
 
