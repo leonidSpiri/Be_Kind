@@ -46,7 +46,7 @@ class VolunteerHelpListActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         binding.rvWorkList.adapter = workItemAdapter
         workItemAdapter.onWorkItemClickListener = {
-            startActivity(VolunteerActiveHelpItemActivity.newIntent(this, it.id))
+            startActivity(VolunteerApproveHelpItemActivity.newIntent(this, it.id))
         }
     }
 

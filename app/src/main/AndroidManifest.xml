@@ -26,7 +26,7 @@
         android:theme="@style/Theme.BeKind"
         tools:targetApi="tiramisu">
         <activity
-            android:name=".presentation.VolunteerActiveHelpItemActivity"
+            android:name=".presentation.VolunteerApproveHelpItemActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

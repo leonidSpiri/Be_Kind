@@ -16,6 +16,7 @@ import ru.spiridonov.be.kind.R
 import ru.spiridonov.be.kind.databinding.ActivityInvalidHelpBinding
 import ru.spiridonov.be.kind.presentation.viewmodels.HelpViewModel
 import ru.spiridonov.be.kind.presentation.viewmodels.ViewModelFactory
+import ru.spiridonov.be.kind.utils.AllUtils
 import java.util.*
 import javax.inject.Inject
 
@@ -146,7 +147,7 @@ class InvalidHelpActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListe
         myMinute = minute
         binding.btnGetDate.text =
             String.format(dateTimeString, myDay, (myMonth + 1), myYear, myHour, myMinute)
-        val longDate = viewModel.stringToDateLong(
+        val longDate = AllUtils().stringToDateLong(
             "${myDay}.${myMonth + 1}.${myYear} ${myHour}:${myMinute}",
         )
         viewModel.selectedDate.value = if (longDate == -1L) null else longDate

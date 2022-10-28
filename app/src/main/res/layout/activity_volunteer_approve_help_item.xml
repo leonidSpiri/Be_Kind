@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="workItem"
+            type="ru.spiridonov.be.kind.domain.entity.WorkItem" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".presentation.VolunteerApproveHelpItemActivity">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txt_kind_of_help"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@{workItem.kindOfHelp}"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    tools:text="Тип помощи" />
+
+                <TextView
+                    android:id="@+id/txt_when_need_start_help"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:textSize="16sp"
+                    app:whenNeedStartHelp="@{workItem.whenNeedHelp}"
+                    tools:text="Желаемое время начала работы: 23.23.23 23:23" />
+
+                <TextView
+                    android:id="@+id/txt_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:textSize="16sp"
+                    android:text="@{workItem.description}"
+                    tools:text="Описание..." />
+
+                <TextView
+                    android:id="@+id/txt_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:textSize="16sp"
+                    app:HelpAddress="@{workItem.address}"
+                    tools:text="Адрес: Saint Pt." />
+            </LinearLayout>
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

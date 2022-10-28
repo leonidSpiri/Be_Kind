@@ -13,6 +13,8 @@
     <string name="city">Город проживания</string>
     <string name="loading">Загрузка</string>
     <string name="welcome">Добро пожаловать, %s!</string>
+    <string name="whenNeedStartHelp">Желаемое время начала работы: %s</string>
+    <string name="address">Адрес: %s</string>
     <string name="confirm">Подтвердить</string>
     <string name="dob">dob</string>
     <string name="gender">Пол</string>

@@ -7,19 +7,18 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import ru.spiridonov.be.kind.BeKindApp
-import ru.spiridonov.be.kind.databinding.ActivityVolunteerActiveHelpItemBinding
+import ru.spiridonov.be.kind.databinding.ActivityVolunteerApproveHelpItemBinding
 import ru.spiridonov.be.kind.presentation.viewmodels.HelpViewModel
 import ru.spiridonov.be.kind.presentation.viewmodels.ViewModelFactory
 import javax.inject.Inject
 
-class VolunteerActiveHelpItemActivity : AppCompatActivity() {
+class VolunteerApproveHelpItemActivity : AppCompatActivity() {
     private val binding by lazy {
-        ActivityVolunteerActiveHelpItemBinding.inflate(layoutInflater)
+        ActivityVolunteerApproveHelpItemBinding.inflate(layoutInflater)
     }
     private val component by lazy {
         (application as BeKindApp).component
     }
-
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -32,7 +31,7 @@ class VolunteerActiveHelpItemActivity : AppCompatActivity() {
         viewModel.getWorkItem(
             intent.getStringExtra(HELP_ID) ?: throw IllegalArgumentException("HELP_ID is null")
         ) {
-            Log.d("TAG", "onCreate: ${it.toString()}")
+            binding.workItem = it
         }
 
     }
@@ -40,7 +39,7 @@ class VolunteerActiveHelpItemActivity : AppCompatActivity() {
     companion object {
         const val HELP_ID = "help_id"
         fun newIntent(context: Context, id: String): Intent {
-            val intent = Intent(context, VolunteerActiveHelpItemActivity::class.java)
+            val intent = Intent(context, VolunteerApproveHelpItemActivity::class.java)
             intent.putExtra(HELP_ID, id)
             return intent
         }

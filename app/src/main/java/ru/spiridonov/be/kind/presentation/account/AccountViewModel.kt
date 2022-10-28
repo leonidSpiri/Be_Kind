@@ -19,8 +19,6 @@ import ru.spiridonov.be.kind.domain.usecases.invalid_item.GetInvalidItemUseCase
 import ru.spiridonov.be.kind.domain.usecases.volunteer_item.EditVolunteerItemUseCase
 import ru.spiridonov.be.kind.domain.usecases.volunteer_item.GetVolunteerItemUseCase
 import ru.spiridonov.be.kind.utils.AllUtils
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 
@@ -84,7 +82,7 @@ class AccountViewModel @Inject constructor(
                 val storage = FirebaseStorage.getInstance().reference
                 getUserInfo { account ->
                     val photoRef =
-                        storage.child("images/users/${account?.type}/${uuid}/$type-${getDateHour()}.jpg")
+                        storage.child("images/users/${account?.type}/${uuid}/$type-${AllUtils().getRealDateHour()}.jpg")
                     val baos = java.io.ByteArrayOutputStream()
                     bitmapPhoto.compress(Bitmap.CompressFormat.JPEG, 100, baos)
                     val data = baos.toByteArray()
@@ -308,12 +306,6 @@ class AccountViewModel @Inject constructor(
             }
         }
         return result
-    }
-
-    private fun getDateHour(): String {
-        val date = Date()
-        val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault())
-        return formatter.format(date)
     }
 
     private fun parseStroke(input: String?) = input?.trim() ?: ""

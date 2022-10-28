@@ -6,7 +6,7 @@ import dagger.Component
 import ru.spiridonov.be.kind.BeKindApp
 import ru.spiridonov.be.kind.presentation.InvalidHelpActivity
 import ru.spiridonov.be.kind.presentation.MainActivity
-import ru.spiridonov.be.kind.presentation.VolunteerActiveHelpItemActivity
+import ru.spiridonov.be.kind.presentation.VolunteerApproveHelpItemActivity
 import ru.spiridonov.be.kind.presentation.VolunteerHelpListActivity
 import ru.spiridonov.be.kind.presentation.account.AccountActivity
 import ru.spiridonov.be.kind.presentation.account.UserProfileActivity
@@ -29,7 +29,7 @@ interface ApplicationComponent {
     fun inject(activity: VerifiedUserActivity)
     fun inject(activity: InvalidHelpActivity)
     fun inject(activity: VolunteerHelpListActivity)
-    fun inject(activity: VolunteerActiveHelpItemActivity)
+    fun inject(activity: VolunteerApproveHelpItemActivity)
     fun inject(fragment: RegisterFragment)
     fun inject(fragment: LoginFragment)
     fun inject(application: BeKindApp)

@@ -12,7 +12,6 @@ import ru.spiridonov.be.kind.domain.usecases.work_list.EditWorkItemUseCase
 import ru.spiridonov.be.kind.domain.usecases.work_list.GetWorkItemUseCase
 import ru.spiridonov.be.kind.domain.usecases.work_list.GetWorkListUseCase
 import ru.spiridonov.be.kind.utils.AllUtils
-import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
@@ -145,12 +144,4 @@ class HelpViewModel @Inject constructor(
     fun resetErrorInputInvalidPhone() = _errorInputInvalidPhone.postValue(false)
 
     private fun parseStroke(input: String?) = input?.trim() ?: ""
-
-    fun stringToDateLong(date: String) =
-        try {
-            val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
-            sdf.parse(date)?.time ?: -1L
-        } catch (e: Exception) {
-            -1L
-        }
 }
