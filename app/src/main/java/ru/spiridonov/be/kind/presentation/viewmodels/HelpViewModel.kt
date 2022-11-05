@@ -6,8 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.spiridonov.be.kind.domain.entity.InvalidItem
+import ru.spiridonov.be.kind.domain.entity.VolunteerItem
 import ru.spiridonov.be.kind.domain.entity.WorkItem
 import ru.spiridonov.be.kind.domain.usecases.invalid_item.GetInvalidItemUseCase
+import ru.spiridonov.be.kind.domain.usecases.volunteer_item.GetVolunteerItemUseCase
+import ru.spiridonov.be.kind.domain.usecases.work_list.CreateWorkItemUseCase
 import ru.spiridonov.be.kind.domain.usecases.work_list.EditWorkItemUseCase
 import ru.spiridonov.be.kind.domain.usecases.work_list.GetWorkItemUseCase
 import ru.spiridonov.be.kind.domain.usecases.work_list.GetWorkListUseCase
@@ -17,6 +20,8 @@ import javax.inject.Inject
 
 class HelpViewModel @Inject constructor(
     private val getInvalidItemUseCase: GetInvalidItemUseCase,
+    private val getVolunteerItemUseCase: GetVolunteerItemUseCase,
+    private val createWorkItemUseCase: CreateWorkItemUseCase,
     private val editWorkItemUseCase: EditWorkItemUseCase,
     private val getWorkListUseCase: GetWorkListUseCase,
     private val getWorkItemUseCase: GetWorkItemUseCase
@@ -49,6 +54,20 @@ class HelpViewModel @Inject constructor(
 
     private var uuid = ""
 
+    fun approveWork(workItem: WorkItem) =
+        getVolunteerUserInfo { volunteerItem ->
+            if (volunteerItem != null)
+                viewModelScope.launch {
+                    editWorkItemUseCase.invoke(
+                        workItem.copy(
+                            volunteerPhone = volunteerItem.personalPhone,
+                            whoHelpId = volunteerItem.uuid
+                        )
+                    )
+                }
+        }
+
+
     fun getWorkList() =
         viewModelScope.launch {
             getWorkListUseCase.invoke {
@@ -73,12 +92,21 @@ class HelpViewModel @Inject constructor(
             }
         }
 
+    private fun getVolunteerUserInfo(callback: (VolunteerItem?) -> Unit) =
+        viewModelScope.launch {
+            getVolunteerItemUseCase.invoke { volunteerItem ->
+                if (volunteerItem != null) {
+                    callback(volunteerItem)
+                }
+            }
+        }
+
     fun createInvalidWork(address: String, description: String, phone: String) {
         val randomUUID = UUID.randomUUID().toString()
         val idStr = (uuid.dropLast(uuid.length / 2) + (randomUUID.dropLast(randomUUID.length / 2)))
         if (validateInput(idStr, address, description, phone)) {
             viewModelScope.launch {
-                editWorkItemUseCase.invoke(
+                createWorkItemUseCase.invoke(
                     WorkItem(
                         id = idStr,
                         description = parseStroke(description),

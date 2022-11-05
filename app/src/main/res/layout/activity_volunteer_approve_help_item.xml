@@ -61,6 +61,13 @@
                     android:textSize="16sp"
                     app:HelpAddress="@{workItem.address}"
                     tools:text="Адрес: Saint Pt." />
+
+                <Button
+                    android:id="@+id/btn_approve"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="Я помогу!" />
             </LinearLayout>
         </ScrollView>
 

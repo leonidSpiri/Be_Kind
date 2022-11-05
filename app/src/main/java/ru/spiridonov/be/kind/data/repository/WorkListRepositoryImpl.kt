@@ -13,7 +13,7 @@ import javax.inject.Inject
 class WorkListRepositoryImpl @Inject constructor(
 ) : WorkListRepository {
 
-    override suspend fun editWorkItem(workItem: WorkItem) {
+    override suspend fun createWorkItem(workItem: WorkItem) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 Class.forName("org.postgresql.Driver")
@@ -31,10 +31,31 @@ class WorkListRepositoryImpl @Inject constructor(
                         workItem.invalidPhone,
                         workItem.address,
                         workItem.volunteerAge,
-                        workItem.volunteerGender
+                        workItem.volunteerGender,
+                        //workItem.volunteerPhone,
+                        //workItem.whoHelpId
                     )
                 )
+                connection.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
 
+    override suspend fun editWorkItem(workItem: WorkItem) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                Class.forName("org.postgresql.Driver")
+                url = String.format(url, host, port, database)
+                val connection = DriverManager.getConnection(url, user, pass)
+                val st: Statement = connection.createStatement()
+                st.execute(
+                    "UPDATE work_items SET volunteerPhone = '${workItem.volunteerPhone}'," +
+                            " whoHelpId = '${workItem.whoHelpId}'" +
+                            " WHERE id = '${workItem.id}';"
+                )
+                connection.close()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -68,10 +89,13 @@ class WorkListRepositoryImpl @Inject constructor(
                             invalidPhone = rs.getString("invalidPhone"),
                             address = rs.getString("address"),
                             volunteerAge = rs.getString("volunteerAge"),
-                            volunteerGender = rs.getString("volunteerGender")
+                            volunteerGender = rs.getString("volunteerGender"),
+                            volunteerPhone = rs.getString("volunteerphone"),
+                            whoHelpId = rs.getString("whohelpid"),
                         )
                     )
                 }
+                connection.close()
                 callback(list)
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -105,6 +129,7 @@ class WorkListRepositoryImpl @Inject constructor(
                         )
                     )
                 }
+                connection.close()
             } catch (e: Exception) {
                 e.printStackTrace()
             }

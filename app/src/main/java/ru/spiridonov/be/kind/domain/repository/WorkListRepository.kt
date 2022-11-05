@@ -3,6 +3,8 @@ package ru.spiridonov.be.kind.domain.repository
 import ru.spiridonov.be.kind.domain.entity.WorkItem
 
 interface WorkListRepository {
+    suspend fun createWorkItem(workItem: WorkItem)
+
     suspend fun editWorkItem(workItem: WorkItem)
 
     suspend fun getFilterWorkList(query: String, callback: (List<WorkItem>) -> Unit)
