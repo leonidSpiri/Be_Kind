@@ -4,6 +4,7 @@ data class WorkItem(
     var id: String,
     var description: String,
     var isDone: Boolean = false,
+    var status: String,
     val whoNeedHelpId: String,
     val timestamp: Long,
     val whenNeedHelp: Long,
@@ -18,5 +19,6 @@ data class WorkItem(
     val degreeOfVolunteer: Int? = null,
     val needMedicineCertificate: Boolean = false,
     val whoHelpId: String? = null,
+    val doneCode: String,
     var realCoordinatesVolunteer: String? = null
 )

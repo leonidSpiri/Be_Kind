@@ -5,7 +5,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 import ru.spiridonov.be.kind.presentation.account.AccountViewModel
-import ru.spiridonov.be.kind.presentation.viewmodels.HelpViewModel
+import ru.spiridonov.be.kind.presentation.active_work.ActiveHelpViewModel
+import ru.spiridonov.be.kind.presentation.create_work.HelpViewModel
 import ru.spiridonov.be.kind.presentation.viewmodels.MainViewModel
 
 @Module
@@ -24,4 +25,9 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(HelpViewModel::class)
     fun bindHelpViewModel(viewModel: HelpViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ActiveHelpViewModel::class)
+    fun bindActiveHelpViewModel(viewModel: ActiveHelpViewModel): ViewModel
 }

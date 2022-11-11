@@ -1,4 +1,4 @@
-package ru.spiridonov.be.kind.presentation
+package ru.spiridonov.be.kind.presentation.create_work
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider
 import ru.spiridonov.be.kind.BeKindApp
 import ru.spiridonov.be.kind.R
 import ru.spiridonov.be.kind.databinding.ActivityInvalidHelpBinding
-import ru.spiridonov.be.kind.presentation.viewmodels.HelpViewModel
 import ru.spiridonov.be.kind.presentation.viewmodels.ViewModelFactory
 import ru.spiridonov.be.kind.utils.AllUtils
 import java.util.*

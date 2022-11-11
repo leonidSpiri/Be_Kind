@@ -26,7 +26,21 @@
         android:theme="@style/Theme.BeKind"
         tools:targetApi="tiramisu">
         <activity
-            android:name=".presentation.VolunteerApproveHelpItemActivity"
+            android:name=".presentation.active_work.ActiveInvalidActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".presentation.active_work.ActiveVolunteerActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".presentation.create_work.VolunteerApproveHelpItemActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -67,14 +81,14 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.InvalidHelpActivity"
+            android:name=".presentation.create_work.InvalidHelpActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.VolunteerHelpListActivity"
+            android:name=".presentation.create_work.VolunteerHelpListActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

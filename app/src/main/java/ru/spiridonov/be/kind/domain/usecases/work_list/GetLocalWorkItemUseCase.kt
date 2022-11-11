@@ -7,5 +7,5 @@ import javax.inject.Inject
 class GetLocalWorkItemUseCase @Inject constructor(
     private val repository: WorkListRepository
 ) {
-    operator fun invoke(callback: (WorkItem) -> Unit) = repository.getLocalWorkItem(callback)
+    operator fun invoke(callback: (WorkItem?) -> Unit) = repository.getLocalWorkItem(callback)
 }

@@ -73,3 +73,14 @@ fun textHelpAddress(textView: TextView, text: String?) {
         text
     )
 }
+
+@BindingAdapter("isWorkActive")
+fun textActiveWork(textView: TextView, status: String?) {
+    if (!status.isNullOrEmpty()) {
+        if (status == "Завершено")
+            textView.setTextColor(ContextCompat.getColor(textView.context, R.color.orange))
+        else
+            textView.setTextColor(ContextCompat.getColor(textView.context, R.color.good))
+        textView.text = status
+    }
+}

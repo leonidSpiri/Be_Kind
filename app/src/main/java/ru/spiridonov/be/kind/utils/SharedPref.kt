@@ -107,7 +107,10 @@ class SharedPref @Inject constructor() {
                 "userRating"
             )?.toIntOrNull()
                 ?: 0,
-            endedHelp = getUnnamedSharedPref("be_kind_account_volunteer", "endedHelp")?.toIntOrNull()
+            endedHelp = getUnnamedSharedPref(
+                "be_kind_account_volunteer",
+                "endedHelp"
+            )?.toIntOrNull()
                 ?: 0,
             photoUrl = getUnnamedSharedPref("be_kind_account_volunteer", "photoUrl"),
             isAccountConfirmed = context.getSharedPreferences(
@@ -149,12 +152,18 @@ class SharedPref @Inject constructor() {
                 .putBoolean("isCertOfMedicalEduConfirmed", isCertOfMedicalEduConfirmed).apply()
         }
 
-    fun deleteInvalidAccountInfo() =
+    fun deleteInvalidAccountInfo() {
         context.getSharedPreferences("be_kind_account_invalid", Context.MODE_PRIVATE).edit()
             .clear().apply()
+        context.getSharedPreferences("be_kind", Context.MODE_PRIVATE).edit()
+            .clear().apply()
+    }
 
-    fun deleteVolunteerAccountInfo() =
+    fun deleteVolunteerAccountInfo() {
         context.getSharedPreferences("be_kind_account_volunteer", Context.MODE_PRIVATE).edit()
             .clear().apply()
+        context.getSharedPreferences("be_kind", Context.MODE_PRIVATE).edit()
+            .clear().apply()
+    }
 
 }

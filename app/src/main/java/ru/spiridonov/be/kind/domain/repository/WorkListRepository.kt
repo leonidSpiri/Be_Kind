@@ -13,5 +13,5 @@ interface WorkListRepository {
 
     suspend fun getWorkItem(workItemId: String, callback: (WorkItem) -> Unit)
 
-    fun getLocalWorkItem(callback: (WorkItem) -> Unit)
+    fun getLocalWorkItem(callback: (WorkItem?) -> Unit)
 }

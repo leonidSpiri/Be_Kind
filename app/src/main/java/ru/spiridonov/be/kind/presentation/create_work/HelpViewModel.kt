@@ -1,4 +1,4 @@
-package ru.spiridonov.be.kind.presentation.viewmodels
+package ru.spiridonov.be.kind.presentation.create_work
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,6 +15,7 @@ import ru.spiridonov.be.kind.domain.usecases.work_list.EditWorkItemUseCase
 import ru.spiridonov.be.kind.domain.usecases.work_list.GetWorkItemUseCase
 import ru.spiridonov.be.kind.domain.usecases.work_list.GetWorkListUseCase
 import ru.spiridonov.be.kind.utils.AllUtils
+import ru.spiridonov.be.kind.utils.SharedPref
 import java.util.*
 import javax.inject.Inject
 
@@ -54,19 +55,23 @@ class HelpViewModel @Inject constructor(
 
     private var uuid = ""
 
+    fun hasUserActiveWork() = SharedPref().getSharedPref("activeWork") != ""
+
     fun approveWork(workItem: WorkItem) =
         getVolunteerUserInfo { volunteerItem ->
-            if (volunteerItem != null)
+            if (volunteerItem != null) {
                 viewModelScope.launch {
                     editWorkItemUseCase.invoke(
                         workItem.copy(
                             volunteerPhone = volunteerItem.personalPhone,
-                            whoHelpId = volunteerItem.uuid
+                            whoHelpId = volunteerItem.uuid,
+                            status = "Активно"
                         )
                     )
+                    SharedPref().setSharedPref("activeWork", workItem.id)
                 }
+            }
         }
-
 
     fun getWorkList() =
         viewModelScope.launch {
@@ -117,9 +122,12 @@ class HelpViewModel @Inject constructor(
                         invalidPhone = phone,
                         address = parseStroke(address),
                         volunteerAge = spinnerAgeSelected.value!!,
-                        volunteerGender = spinnerGenderSelected.value!!
+                        volunteerGender = spinnerGenderSelected.value!!,
+                        status = "Создано",
+                        doneCode = kotlin.random.Random.nextInt(12345, 98765).toString()
                     )
                 )
+                SharedPref().setSharedPref("activeWork", idStr)
             }
         }
     }

@@ -6,17 +6,20 @@ import ru.spiridonov.be.kind.domain.entity.AccountItem
 import ru.spiridonov.be.kind.domain.usecases.account_item.IsUserLoggedInUseCase
 import ru.spiridonov.be.kind.domain.usecases.invalid_item.GetInvalidItemUseCase
 import ru.spiridonov.be.kind.domain.usecases.volunteer_item.GetVolunteerItemUseCase
+import ru.spiridonov.be.kind.domain.usecases.work_list.GetLocalWorkItemUseCase
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
     private val isUserLoggedInUseCase: IsUserLoggedInUseCase,
     private val getVolunteerItemUseCase: GetVolunteerItemUseCase,
     private val getInvalidItemUseCase: GetInvalidItemUseCase,
+    private val getLocalWorkItemUseCase: GetLocalWorkItemUseCase,
     private val accountItemMapper: AccountItemMapper
 ) : ViewModel() {
 
     fun isUserLoggedIn() = isUserLoggedInUseCase()
 
+    fun getWorkId() = getLocalWorkItemUseCase
 
     fun getUserInfo(callback: (AccountItem?) -> Unit) {
         getVolunteerItemUseCase.invoke { volunteerItem ->

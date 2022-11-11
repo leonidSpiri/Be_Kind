@@ -1,4 +1,4 @@
-package ru.spiridonov.be.kind.presentation
+package ru.spiridonov.be.kind.presentation.create_work
 
 import android.content.Context
 import android.content.Intent
@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider
 import ru.spiridonov.be.kind.BeKindApp
 import ru.spiridonov.be.kind.databinding.ActivityVolunteerApproveHelpItemBinding
 import ru.spiridonov.be.kind.domain.entity.WorkItem
-import ru.spiridonov.be.kind.presentation.viewmodels.HelpViewModel
 import ru.spiridonov.be.kind.presentation.viewmodels.ViewModelFactory
 import javax.inject.Inject
 

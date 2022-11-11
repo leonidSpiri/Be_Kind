@@ -9,6 +9,10 @@ import ru.spiridonov.be.kind.databinding.ActivityMainBinding
 import ru.spiridonov.be.kind.domain.entity.AccountItem
 import ru.spiridonov.be.kind.presentation.account.AccountActivity
 import ru.spiridonov.be.kind.presentation.account.UserProfileActivity
+import ru.spiridonov.be.kind.presentation.active_work.ActiveInvalidActivity
+import ru.spiridonov.be.kind.presentation.active_work.ActiveVolunteerActivity
+import ru.spiridonov.be.kind.presentation.create_work.InvalidHelpActivity
+import ru.spiridonov.be.kind.presentation.create_work.VolunteerHelpListActivity
 import ru.spiridonov.be.kind.presentation.viewmodels.MainViewModel
 import ru.spiridonov.be.kind.presentation.viewmodels.ViewModelFactory
 import javax.inject.Inject
@@ -44,21 +48,47 @@ class MainActivity : AppCompatActivity() {
         if (viewModel.isUserLoggedIn()) {
             binding.btnLoginInvalid.visibility = View.GONE
             binding.btnLoginVolunteer.visibility = View.GONE
+            binding.btnActiveWork.visibility = View.GONE
+            binding.btnHelp.visibility = View.GONE
             binding.btnUserProfile.visibility = View.VISIBLE
             viewModel.getUserInfo { account ->
                 if (account != null) {
                     this.account = account
-                    binding.btnHelp.visibility = View.VISIBLE
-                    if (account.type == INVALID_TYPE) {
-                        binding.btnHelp.text = "Мне нужна помощь"
-                        binding.btnHelp.setOnClickListener {
-                            startActivity(InvalidHelpActivity.newIntent(this))
-                        }
-                    }
-                    if (account.type == VOLUNTEER_TYPE) {
-                        binding.btnHelp.text = "Я хочу помочь"
-                        binding.btnHelp.setOnClickListener {
-                            startActivity(VolunteerHelpListActivity.newIntent(this))
+                    viewModel.getWorkId().invoke { workItem ->
+                        if (workItem != null) {
+                            val workId = workItem.id
+                            binding.btnActiveWork.visibility = View.VISIBLE
+                            if (account.type == INVALID_TYPE) {
+                                //binding.btnActiveWork.text = "Мне нужна помощь"
+                                binding.btnActiveWork.setOnClickListener {
+                                    startActivity(ActiveInvalidActivity.newIntent(this, workId))
+                                }
+                            }
+                            if (account.type == VOLUNTEER_TYPE) {
+                                //binding.btnActiveWork.text = "Я хочу помочь"
+                                binding.btnActiveWork.setOnClickListener {
+                                    startActivity(
+                                        ActiveVolunteerActivity.newIntent(
+                                            this,
+                                            workId
+                                        )
+                                    )
+                                }
+                            }
+                        } else {
+                            binding.btnHelp.visibility = View.VISIBLE
+                            if (account.type == INVALID_TYPE) {
+                                binding.btnHelp.text = "Мне нужна помощь"
+                                binding.btnHelp.setOnClickListener {
+                                    startActivity(InvalidHelpActivity.newIntent(this))
+                                }
+                            }
+                            if (account.type == VOLUNTEER_TYPE) {
+                                binding.btnHelp.text = "Я хочу помочь"
+                                binding.btnHelp.setOnClickListener {
+                                    startActivity(VolunteerHelpListActivity.newIntent(this))
+                                }
+                            }
                         }
                     }
                 }
@@ -66,6 +96,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             binding.btnUserProfile.visibility = View.GONE
             binding.btnHelp.visibility = View.GONE
+            binding.btnActiveWork.visibility = View.GONE
             binding.btnLoginInvalid.visibility = View.VISIBLE
             binding.btnLoginVolunteer.visibility = View.VISIBLE
         }

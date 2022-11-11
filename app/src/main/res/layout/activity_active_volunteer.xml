@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="workItem"
             type="ru.spiridonov.be.kind.domain.entity.WorkItem" />
@@ -12,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.create_work.VolunteerApproveHelpItemActivity">
+        tools:context=".presentation.active_work.ActiveVolunteerActivity">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -36,6 +37,15 @@
                     tools:text="Тип помощи" />
 
                 <TextView
+                    android:id="@+id/txt_active_work"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:textSize="16sp"
+                    app:isWorkActive="@{workItem.status}"
+                    tools:text="Активно" />
+
+                <TextView
                     android:id="@+id/txt_when_need_start_help"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -49,8 +59,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:textSize="16sp"
                     android:text="@{workItem.description}"
+                    android:textSize="16sp"
                     tools:text="Описание..." />
 
                 <TextView
@@ -62,12 +72,6 @@
                     app:HelpAddress="@{workItem.address}"
                     tools:text="Адрес: Saint Pt." />
 
-                <Button
-                    android:id="@+id/btn_approve"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:text="Я помогу!" />
             </LinearLayout>
         </ScrollView>
 

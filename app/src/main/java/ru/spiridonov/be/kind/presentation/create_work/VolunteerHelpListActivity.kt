@@ -1,4 +1,4 @@
-package ru.spiridonov.be.kind.presentation
+package ru.spiridonov.be.kind.presentation.create_work
 
 import android.content.Context
 import android.content.Intent
@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider
 import ru.spiridonov.be.kind.BeKindApp
 import ru.spiridonov.be.kind.databinding.ActivityVolunteerHelpBinding
 import ru.spiridonov.be.kind.presentation.adapters.WorkItemAdapter
-import ru.spiridonov.be.kind.presentation.viewmodels.HelpViewModel
 import ru.spiridonov.be.kind.presentation.viewmodels.ViewModelFactory
 import javax.inject.Inject
 
@@ -34,6 +33,11 @@ class VolunteerHelpListActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, viewModelFactory)[HelpViewModel::class.java]
         observeViewModel()
         setupRecyclerView()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (viewModel.hasUserActiveWork()) finish()
     }
 
     private fun observeViewModel() {

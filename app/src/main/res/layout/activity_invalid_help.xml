@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="ru.spiridonov.be.kind.presentation.viewmodels.HelpViewModel" />
+            type="ru.spiridonov.be.kind.presentation.create_work.HelpViewModel" />
     </data>
 
     <ScrollView
@@ -22,7 +22,7 @@
             android:paddingStart="5dp"
             android:paddingTop="5dp"
             android:paddingEnd="5dp"
-            tools:context=".presentation.InvalidHelpActivity">
+            tools:context=".presentation.create_work.InvalidHelpActivity">
 
 
             <com.google.android.material.textfield.TextInputLayout
