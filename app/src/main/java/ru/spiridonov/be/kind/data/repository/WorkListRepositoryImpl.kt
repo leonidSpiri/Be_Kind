@@ -78,7 +78,7 @@ class WorkListRepositoryImpl @Inject constructor(
                 val connection = DriverManager.getConnection(url, user, pass)
                 val st: Statement = connection.createStatement()
                 val rs: ResultSet =
-                    st.executeQuery("select * from work_items")
+                    st.executeQuery("select * from work_items where status = 'Создано' order by timeStampNow desc;")
                 val list = mutableListOf<WorkItem>()
                 while (rs.next()) {
                     list.add(
@@ -145,9 +145,9 @@ class WorkListRepositoryImpl @Inject constructor(
     }
 
     override fun getLocalWorkItem(callback: (WorkItem?) -> Unit) {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                getUserInfo {
+        try {
+            getUserInfo {
+                CoroutineScope(Dispatchers.IO).launch {
                     if (it != null) callback(null)
                     Class.forName("org.postgresql.Driver")
                     url = String.format(url, host, port, database)
@@ -176,9 +176,9 @@ class WorkListRepositoryImpl @Inject constructor(
                     }
                     connection.close()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider
 import ru.spiridonov.be.kind.BeKindApp
 import ru.spiridonov.be.kind.databinding.ActivityActiveInvalidBinding
 import ru.spiridonov.be.kind.domain.entity.WorkItem
-import ru.spiridonov.be.kind.presentation.create_work.VolunteerApproveHelpItemActivity
 import ru.spiridonov.be.kind.presentation.viewmodels.ViewModelFactory
 import javax.inject.Inject
 
@@ -35,14 +34,13 @@ class ActiveInvalidActivity : AppCompatActivity() {
 
 
     private fun observeViewModel() =
-        viewModel.getWorkItem(
-            intent.getStringExtra(VolunteerApproveHelpItemActivity.HELP_ID)
-                ?: throw IllegalArgumentException("HELP_ID is null")
-        ) {
-            binding.workItem = it
-            workItem = it ?: throw IllegalArgumentException("WorkItem is null")
-            if (workItem.whoHelpId != null)
-                showVolunteer(workItem.volunteerPhone)
+        viewModel.workItem.observe(this) {
+            if (it != null) {
+                binding.workItem = it
+                workItem = it
+                if (workItem.whoHelpId != null)
+                    showVolunteer(workItem.volunteerPhone)
+            }
         }
 
     private fun showVolunteer(phone: String?) {

@@ -51,10 +51,15 @@ class MainActivity : AppCompatActivity() {
             binding.btnActiveWork.visibility = View.GONE
             binding.btnHelp.visibility = View.GONE
             binding.btnUserProfile.visibility = View.VISIBLE
+            viewModel.getWork()
             viewModel.getUserInfo { account ->
                 if (account != null) {
                     this.account = account
-                    viewModel.getWorkId().invoke { workItem ->
+                    viewModel.workItem.observe(this){workItem ->
+                        binding.btnLoginInvalid.visibility = View.GONE
+                        binding.btnLoginVolunteer.visibility = View.GONE
+                        binding.btnActiveWork.visibility = View.GONE
+                        binding.btnHelp.visibility = View.GONE
                         if (workItem != null) {
                             val workId = workItem.id
                             binding.btnActiveWork.visibility = View.VISIBLE
