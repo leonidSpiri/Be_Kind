@@ -19,6 +19,7 @@
     <string name="dob">dob</string>
     <string name="gender">Пол</string>
     <string name="logout">Выйти</string>
+    <string name="end_work">Завершить работу</string>
     <string name="delete">Удалить профиль</string>
     <string name="passport_confirmed">Паспорт подтвержден</string>
     <string name="passport_not_confirmed">Паспорт не подтвержден</string>
@@ -37,4 +38,5 @@
     <string name="help_start_time">Необходимое время помощи</string>
     <string name="help_description">Описание помощи</string>
     <string name="choose_date_help">Выбрать время помощи</string>
+    <string name="end_work_code">Код завершения работы</string>
 </resources>

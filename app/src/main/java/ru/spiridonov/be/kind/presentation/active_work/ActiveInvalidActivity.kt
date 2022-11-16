@@ -1,8 +1,11 @@
 package ru.spiridonov.be.kind.presentation.active_work
 
+import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import ru.spiridonov.be.kind.BeKindApp
@@ -30,6 +33,7 @@ class ActiveInvalidActivity : AppCompatActivity() {
         setContentView(binding.root)
         viewModel = ViewModelProvider(this, viewModelFactory)[ActiveHelpViewModel::class.java]
         observeViewModel()
+        endWork()
     }
 
 
@@ -38,14 +42,29 @@ class ActiveInvalidActivity : AppCompatActivity() {
             if (it != null) {
                 binding.workItem = it
                 workItem = it
+                Log.d("ActiveInvalidActivity", "observeViewModel: ${it}")
                 if (workItem.whoHelpId != null)
                     showVolunteer(workItem.volunteerPhone)
             }
         }
 
+    private fun endWork() =
+        binding.btnEndWork.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Завершение работы")
+                .setMessage("Вы уверены что хотите завершить работу?\n" +
+                        "Покажите данный код волонтеру:\n${workItem.doneCode}")
+                .setPositiveButton("Да") { _, _ ->
+                    viewModel.setFinishStatus(workItem)
+                finish()
+                }
+                .setNegativeButton("Нет") { _, _ -> }
+                .show()
+        }
+
     private fun showVolunteer(phone: String?) {
         if (!phone.isNullOrEmpty())
-            binding.txtVolunteerPhone.text = phone
+            binding.txtVolunteerPhone.text = "Телефон волонтера: $phone"
     }
 
     companion object {

@@ -1,8 +1,11 @@
 package ru.spiridonov.be.kind.presentation.active_work
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import ru.spiridonov.be.kind.BeKindApp
@@ -29,7 +32,11 @@ class ActiveVolunteerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this, viewModelFactory)[ActiveHelpViewModel::class.java]
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
         observeViewModel()
+        finishWork()
+        addTextChangeListeners()
     }
 
 
@@ -41,6 +48,32 @@ class ActiveVolunteerActivity : AppCompatActivity() {
             }
         }
 
+    private fun finishWork() =
+        binding.btnEndWork.setOnClickListener {
+            if (viewModel.endVolunteerWork(binding.etEndWork.text.toString(), workItem))
+                AlertDialog.Builder(this)
+                    .setTitle("Завершение работы")
+                    .setMessage("Работа завершена")
+                    .setPositiveButton("Ок") { _, _ ->
+                        finish()
+                    }
+                    .show()
+        }
+
+    private fun addTextChangeListeners() =
+        with(binding) {
+            etEndWork.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    viewModel?.resetErrorInputFinishCode()
+                }
+
+                override fun afterTextChanged(p0: Editable?) {
+                }
+            })
+        }
 
     companion object {
         private const val HELP_ID = "help_id"

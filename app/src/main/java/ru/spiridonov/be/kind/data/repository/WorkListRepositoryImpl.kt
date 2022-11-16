@@ -56,7 +56,8 @@ class WorkListRepositoryImpl @Inject constructor(
                 st.execute(
                     "UPDATE work_items SET volunteerPhone = '${workItem.volunteerPhone}'," +
                             " whoHelpId = '${workItem.whoHelpId}'," +
-                            " status = '${workItem.status}'" +
+                            " status = '${workItem.status}'," +
+                            " isDone = '${workItem.isDone}'" +
                             " WHERE id = '${workItem.id}';"
                 )
                 connection.close()
@@ -94,8 +95,8 @@ class WorkListRepositoryImpl @Inject constructor(
                             address = rs.getString("address"),
                             volunteerAge = rs.getString("volunteerAge"),
                             volunteerGender = rs.getString("volunteerGender"),
-                            volunteerPhone = rs.getString("volunteerphone"),
-                            whoHelpId = rs.getString("whohelpid"),
+                            volunteerPhone = rs.getString("volunteerPhone"),
+                            whoHelpId = rs.getString("whoHelpId"),
                             status = rs.getString("status"),
                             doneCode = rs.getString("doneCode"),
                         )
@@ -132,6 +133,8 @@ class WorkListRepositoryImpl @Inject constructor(
                             address = rs.getString("address"),
                             volunteerAge = rs.getString("volunteerAge"),
                             volunteerGender = rs.getString("volunteerGender"),
+                            whoHelpId = rs.getString("whoHelpId"),
+                            volunteerPhone = rs.getString("volunteerPhone"),
                             status = rs.getString("status"),
                             doneCode = rs.getString("doneCode")
                         )
@@ -169,6 +172,8 @@ class WorkListRepositoryImpl @Inject constructor(
                                 address = rs.getString("address"),
                                 volunteerAge = rs.getString("volunteerAge"),
                                 volunteerGender = rs.getString("volunteerGender"),
+                                volunteerPhone = rs.getString("volunteerPhone"),
+                                whoHelpId = rs.getString("whoHelpId"),
                                 status = rs.getString("status"),
                                 doneCode = rs.getString("doneCode")
                             )
