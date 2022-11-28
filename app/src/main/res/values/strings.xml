@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BeKind</string>
+    <string name="app_name">Будь добр!</string>
     <string name="email">Почта</string>
     <string name="password">Пароль</string>
     <string name="sign_in">Войти</string>
