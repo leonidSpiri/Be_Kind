@@ -200,9 +200,9 @@ class WorkListRepositoryImpl @Inject constructor(
     }
 
     companion object {
-        private const val host = "ec2-63-32-248-14.eu-west-1.compute.amazonaws.com"
-        private const val database = "dbbl30gd4a1qpu"
-        private const val port = 5432
+        private const val host = "178.154.223.161"
+        private const val database = "postgres"
+        private const val port = 32876
         private const val user = "ygaxqwmkigdfoe"
         private const val pass = "72bc02774a938cdd81c33e5e3d56bab6ad52e79f64b878d9284387c4e04ce930"
         private var url = "jdbc:postgresql://%s:%d/%s"
