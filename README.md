@@ -1,4 +1,4 @@
-#Entities   
+## Entities   
 All:   
         //val uuid: String,
         val surName: String,
@@ -24,8 +24,8 @@ Volunteer:
         //var certOfMedicalEduUrl: String? = null,
 
 
-docker-compose.yaml
-'
+## docker-compose.yaml
+```yaml
 version: '3.5'
 
 services:
@@ -48,4 +48,31 @@ volumes:
 
 volumes:
 db_be_kind_vol: { }
-'
+```
+
+## SQL
+```sql
+create table work_items
+(
+    id                       varchar(100) primary key,
+    status                   varchar(75)  not null,
+    description              varchar(300) not null,
+    isDone                   bool         not null,
+    whoNeedHelpId            varchar(75)  not null,
+    whenNeedHelp             varchar(75)  not null,
+    timeStampNow             varchar(75)  not null,
+    kindOfHelp               varchar(75)  not null,
+    startCoordinates         varchar(75)  null,
+    address                  varchar(75)  not null,
+    invalidPhone             varchar(75)  not null,
+    volunteerPhone           varchar(75)  null,
+    volunteerGender          varchar(75)  not null,
+    volunteerAge             varchar(75)  not null,
+    realCoordinatesInvalid   varchar(75)  null,
+    degreeOfVolunteer        varchar(75)  null,
+    needMedicineCertificate  bool         null,
+    whoHelpId                varchar(75)  null,
+    doneCode                 varchar(7)   null,
+    realCoordinatesVolunteer varchar(75)  null
+);
+```
